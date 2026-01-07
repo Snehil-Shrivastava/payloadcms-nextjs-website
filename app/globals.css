@@ -27,3 +27,7 @@ body {
 .stack-card {
   will-change: transform;
 }
+
+.hide {
+  display: none;
+}
