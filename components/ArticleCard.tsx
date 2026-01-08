@@ -1,4 +1,4 @@
-"use client"; // Ensure this is a client component
+"use client";
 
 import Image from "next/image";
 import { useState } from "react";
@@ -12,11 +12,11 @@ export interface Article {
   cover: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   author: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  category: any;
   publishedAt: Date;
 }
 
-// 1. We create a sub-component for the individual card
-// This ensures 'isExpanded' belongs to this specific card only.
 const SingleCard = ({
   article,
   strapiURL,
@@ -32,20 +32,21 @@ const SingleCard = ({
 
   return (
     <article
-      className={`bg-background flex gap-10 relative ${
+      className={`bg-background flex gap-10 relative select-none ${
         isExpanded ? "articleCardContainerEnlarged" : "articleCardContainer"
       }`}
       onClick={handleToggle}
     >
       <div
-        className={`relative cursor-pointer ${isExpanded ? "w-4/5" : "w-full"}`}
+        className={`relative cursor-pointer flex gap-20 ${
+          isExpanded ? "w-4/5" : "w-full"
+        }`}
       >
         <Image
-          className="object-cover transition-all duration-500 ease-in-out select-none" // Added transition to image
+          className="object-cover transition-all duration-500 ease-in-out select-none"
           src={strapiURL + article.cover.url}
           alt={article.title}
           fill
-          // Update sizes so the browser downloads the high-res version for the expanded state
           priority
         />
         <div className="flex flex-col w-70 items-end absolute top-0 -left-85">
@@ -54,14 +55,22 @@ const SingleCard = ({
             {article.title}
           </h3>
           <span className="text-neutral-600">{article.author.name}</span>
-          <span className="text-neutral-600 text-sm hide">2026</span>
+          <span className="text-neutral-600 uppercase font-semibold">
+            {article.category.name}
+          </span>
+          <span
+            className={`text-neutral-600 text-sm transition-all duration-200 ${
+              isExpanded ? "" : "invisible"
+            }`}
+          >
+            2026
+          </span>
         </div>
       </div>
     </article>
   );
 };
 
-// 2. The main component simply maps the data to the sub-component
 const ArticleCard = ({
   articles,
   strapiURL,

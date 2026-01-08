@@ -7,7 +7,6 @@ import { gsap, Expo } from "gsap";
 const SplashScreen = ({ children }: { children: React.ReactNode }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const revealRef = useRef<HTMLDivElement>(null);
-
   const [counter, setCounter] = useState<number>(0);
 
   const reveal = () => {
@@ -53,7 +52,6 @@ const SplashScreen = ({ children }: { children: React.ReactNode }) => {
         ref={revealRef}
         className="h-screen w-screen bg-black flex justify-center items-center absolute top-0 origin-top"
       ></div>
-
       <div
         ref={contentRef}
         className="opacity-0 hidden h-full w-full scale-90 bg-background z-2 flex-col text-black"

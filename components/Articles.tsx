@@ -14,6 +14,8 @@ export interface Article {
   cover: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   author: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  category: any;
   publishedAt: Date;
 }
 
@@ -29,14 +31,14 @@ const Article = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    return new Date(date).toLocaleDateString("en-US", options);
-  };
+  // const formatDate = (date: Date) => {
+  //   const options: Intl.DateTimeFormatOptions = {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //   };
+  //   return new Date(date).toLocaleDateString("en-US", options);
+  // };
 
   useEffect(() => {
     const smoother = ScrollSmoother.create({
