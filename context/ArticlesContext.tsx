@@ -68,12 +68,10 @@ export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  // Derive unique categories from articles
   const categories = Array.from(
     new Set(articles.map((article) => article.category.name))
   );
 
-  // Filter articles based on selected category
   const filteredArticles = selectedCategory
     ? articles.filter(
         (article) =>

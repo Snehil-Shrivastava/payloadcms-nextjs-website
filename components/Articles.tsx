@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -25,22 +25,18 @@ const Article = () => {
       effects: true,
     });
 
-    // Scroll squeeze effect
     const handleScroll = () => {
       if (containerRef.current) {
-        // Squeeze the container when scrolling
         gsap.to(containerRef.current, {
           scale: 0.9,
           duration: 1.5,
           ease: "power2.out",
         });
 
-        // Clear existing timeout
         if (scrollTimeout.current) {
           clearTimeout(scrollTimeout.current);
         }
 
-        // Set timeout to restore scale when scrolling stops
         scrollTimeout.current = setTimeout(() => {
           if (containerRef.current) {
             gsap.to(containerRef.current, {
@@ -53,7 +49,6 @@ const Article = () => {
       }
     };
 
-    // Add scroll listener
     window.addEventListener("scroll", handleScroll);
 
     return () => {

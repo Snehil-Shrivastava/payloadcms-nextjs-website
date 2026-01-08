@@ -54,11 +54,6 @@ const SingleCard = ({
           <span className="text-neutral-600 uppercase font-semibold">
             {article.category.name}
           </span>
-          <span
-            className={`text-neutral-600 text-sm transition-all duration-200 invisible`}
-          >
-            2026
-          </span>
         </div>
       </div>
     </article>
