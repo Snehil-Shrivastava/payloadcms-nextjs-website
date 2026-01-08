@@ -32,16 +32,12 @@ const SingleCard = ({
 
   return (
     <article
-      className={`bg-background flex gap-10 relative select-none ${
+      className={`bg-background relative select-none ${
         isExpanded ? "articleCardContainerEnlarged" : "articleCardContainer"
       }`}
       onClick={handleToggle}
     >
-      <div
-        className={`relative cursor-pointer flex gap-20 ${
-          isExpanded ? "w-4/5" : "w-full"
-        }`}
-      >
+      <div className={`relative cursor-pointer w-full h-full max-w-275`}>
         <Image
           className="object-cover transition-all duration-500 ease-in-out select-none"
           src={strapiURL + article.cover.url}
@@ -59,9 +55,7 @@ const SingleCard = ({
             {article.category.name}
           </span>
           <span
-            className={`text-neutral-600 text-sm transition-all duration-200 ${
-              isExpanded ? "" : "invisible"
-            }`}
+            className={`text-neutral-600 text-sm transition-all duration-200 invisible`}
           >
             2026
           </span>

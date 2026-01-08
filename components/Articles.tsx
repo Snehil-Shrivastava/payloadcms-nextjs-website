@@ -113,7 +113,7 @@ const Article = () => {
         <div className="w-full mx-auto py-20">
           <div
             ref={containerRef}
-            className="flex flex-col gap-8 origin-center will-change-transform w-full max-w-170 mx-auto"
+            className="grid grid-cols-1 gap-8 origin-center will-change-transform w-full max-w-145 mx-auto"
           >
             <ArticleCard articles={articles} strapiURL={STRAPI_URL} />
           </div>
