@@ -22,7 +22,7 @@ const Article = () => {
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
       smooth: 1.7,
-      effects: true,
+      // effects: true,
     });
 
     const handleScroll = () => {
