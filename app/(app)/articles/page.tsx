@@ -9,7 +9,7 @@ import { Flip } from "gsap/all";
 import { useArticles } from "@/context/ArticlesContext";
 
 import dog from "@/public/dog-placeholder.jpg";
-import { Article } from "@/payload-types";
+import { Article } from "@/context/ArticlesContext";
 
 gsap.registerPlugin(Flip);
 
@@ -28,7 +28,13 @@ const EXPANDED = {
 
 /* ---------------- SINGLE CARD ---------------- */
 
-const SingleCard = ({ article }: { article: Article }) => {
+const SingleCard = ({
+  article,
+  strapiURL,
+}: {
+  article: Article;
+  strapiURL: string;
+}) => {
   const mainRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
@@ -116,11 +122,9 @@ const SingleCard = ({ article }: { article: Article }) => {
           <h3 className="text-2xl font-medium text-gray-800 text-end">
             {article.title}
           </h3>
-          {/* @ts-expect-error random */}
           <span className="text-neutral-600">{article.author.name}</span>
           <span className="text-neutral-600 uppercase font-semibold">
-            {/* @ts-expect-error random */}
-            {article.category.category}
+            {article.category.name}
           </span>
         </div>
       </div>
@@ -137,8 +141,7 @@ const SingleCard = ({ article }: { article: Article }) => {
                 className="w-170 h-110 shrink-0 overflow-hidden"
               >
                 <Image
-                  // @ts-expect-error random
-                  src={article.coverImage.url}
+                  src={strapiURL + article.cover.url}
                   alt={article.title}
                   width={COLLAPSED.width}
                   height={COLLAPSED.height}
@@ -187,7 +190,7 @@ const ArticleCardPage = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
-  const { filteredArticles } = useArticles();
+  const { filteredArticles, strapiURL } = useArticles();
   return (
     <>
       <div ref={wrapperRef} id="smooth-wrapper" className="min-h-screen">
@@ -198,7 +201,11 @@ const ArticleCardPage = () => {
               className="grid grid-cols-1 gap-8 w-170 place-items-end relative left-1/2 -translate-x-1/2"
             >
               {filteredArticles.map((article) => (
-                <SingleCard key={article.id} article={article} />
+                <SingleCard
+                  key={article.id}
+                  article={article}
+                  strapiURL={strapiURL}
+                />
               ))}
             </div>
           </div>

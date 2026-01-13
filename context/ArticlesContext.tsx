@@ -1,8 +1,25 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
-import { Article } from "@/payload-types";
+export interface Article {
+  id: string;
+  title: string;
+  content: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cover: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  author: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  category: any;
+  publishedAt: Date;
+}
 
 interface ArticlesContextType {
   articles: Article[];
@@ -10,6 +27,7 @@ interface ArticlesContextType {
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
   categories: string[];
+  strapiURL: string;
 }
 
 const ArticlesContext = createContext<ArticlesContextType | undefined>(
@@ -18,34 +36,46 @@ const ArticlesContext = createContext<ArticlesContextType | undefined>(
 
 const STRAPI_URL = "http://127.0.0.1:1337";
 
-export const ArticlesProvider = ({
-  children,
-  initialArticles,
-}: {
-  children: ReactNode;
-  initialArticles: Article[];
-}) => {
-  const [articles, setArticles] = useState<Article[]>(initialArticles);
+export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(`${STRAPI_URL}/api/articles?populate=*`);
+        const data = await response.json();
+        if (isMounted && data.data) {
+          setArticles(data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch articles", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchArticles();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const categories = Array.from(
-    new Set(
-      articles
-        .map((article) =>
-          typeof article.category === "object"
-            ? article.category?.category
-            : null
-        )
-        .filter((title): title is string => !!title)
-    )
+    new Set(articles.map((article) => article.category.name))
   );
 
   const filteredArticles = selectedCategory
     ? articles.filter(
         (article) =>
-          typeof article.category === "object" &&
           article.category?.category.toLowerCase() ===
-            selectedCategory.toLowerCase()
+          selectedCategory.toLowerCase()
       )
     : articles;
 
@@ -57,6 +87,7 @@ export const ArticlesProvider = ({
         selectedCategory,
         setSelectedCategory,
         categories,
+        strapiURL: STRAPI_URL,
       }}
     >
       {children}
