@@ -1,25 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-export interface Article {
-  id: string;
-  title: string;
-  content: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cover: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  author: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  category: any;
-  publishedAt: Date;
-}
+import { Article } from "@/payload-types";
 
 interface ArticlesContextType {
   articles: Article[];
@@ -27,8 +10,6 @@ interface ArticlesContextType {
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
   categories: string[];
-  strapiURL: string;
-  isLoading: boolean;
 }
 
 const ArticlesContext = createContext<ArticlesContextType | undefined>(
@@ -37,45 +18,34 @@ const ArticlesContext = createContext<ArticlesContextType | undefined>(
 
 const STRAPI_URL = "http://127.0.0.1:1337";
 
-export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
-  const [articles, setArticles] = useState<Article[]>([]);
+export const ArticlesProvider = ({
+  children,
+  initialArticles,
+}: {
+  children: ReactNode;
+  initialArticles: Article[];
+}) => {
+  const [articles, setArticles] = useState<Article[]>(initialArticles);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchArticles = async () => {
-      try {
-        const response = await fetch(`${STRAPI_URL}/api/articles?populate=*`);
-        const data = await response.json();
-        if (isMounted && data.data) {
-          setArticles(data.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch articles", error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchArticles();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const categories = Array.from(
-    new Set(articles.map((article) => article.category.name))
+    new Set(
+      articles
+        .map((article) =>
+          typeof article.category === "object"
+            ? article.category?.category
+            : null
+        )
+        .filter((title): title is string => !!title)
+    )
   );
 
   const filteredArticles = selectedCategory
     ? articles.filter(
         (article) =>
-          article.category.name.toLowerCase() === selectedCategory.toLowerCase()
+          typeof article.category === "object" &&
+          article.category?.category.toLowerCase() ===
+            selectedCategory.toLowerCase()
       )
     : articles;
 
@@ -87,8 +57,6 @@ export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
         selectedCategory,
         setSelectedCategory,
         categories,
-        strapiURL: STRAPI_URL,
-        isLoading,
       }}
     >
       {children}

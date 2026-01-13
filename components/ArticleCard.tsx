@@ -6,9 +6,9 @@ import "./ArticleCard.css";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { Flip } from "gsap/all";
-import { Article } from "@/context/ArticlesContext";
 
 import dog from "@/public/dog-placeholder.jpg";
+import { Article } from "@/payload-types";
 
 gsap.registerPlugin(Flip);
 
@@ -308,13 +308,7 @@ const EXPANDED = {
 //   );
 // };
 
-const SingleCard = ({
-  article,
-  strapiURL,
-}: {
-  article: Article;
-  strapiURL: string;
-}) => {
+const SingleCard = ({ article }: { article: Article }) => {
   const mainRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
@@ -402,9 +396,11 @@ const SingleCard = ({
           <h3 className="text-2xl font-medium text-gray-800 text-end">
             {article.title}
           </h3>
+          {/* @ts-expect-error random */}
           <span className="text-neutral-600">{article.author.name}</span>
           <span className="text-neutral-600 uppercase font-semibold">
-            {article.category.name}
+            {/* @ts-expect-error random */}
+            {article.category.category}
           </span>
         </div>
       </div>
@@ -421,7 +417,8 @@ const SingleCard = ({
                 className="w-170 h-110 shrink-0 overflow-hidden"
               >
                 <Image
-                  src={strapiURL + article.cover.url}
+                  // @ts-expect-error random
+                  src={article.coverImage.url}
                   alt={article.title}
                   width={COLLAPSED.width}
                   height={COLLAPSED.height}
@@ -467,15 +464,9 @@ const SingleCard = ({
 
 /* ---------------- LIST ---------------- */
 
-const ArticleCard = ({
-  articles,
-  strapiURL,
-}: {
-  articles: Article[];
-  strapiURL: string;
-}) => {
+const ArticleCard = ({ articles }: { articles: Article[] }) => {
   return articles.map((article) => (
-    <SingleCard key={article.id} article={article} strapiURL={strapiURL} />
+    <SingleCard key={article.id} article={article} />
   ));
 };
 

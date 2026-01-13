@@ -15,7 +15,7 @@ const Article = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const { filteredArticles, strapiURL } = useArticles();
+  const { filteredArticles } = useArticles();
 
   useEffect(() => {
     const smoother = ScrollSmoother.create({
@@ -70,7 +70,7 @@ const Article = () => {
             ref={containerRef}
             className="grid grid-cols-1 gap-8 origin-center will-change-transform w-full mx-auto place-items-center"
           >
-            <ArticleCard articles={filteredArticles} strapiURL={strapiURL} />
+            <ArticleCard articles={filteredArticles} />
           </div>
         </div>
       </div>
