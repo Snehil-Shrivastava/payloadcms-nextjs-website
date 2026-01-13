@@ -67,6 +67,8 @@ export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  console.log("data", articles);
+
   const categories = Array.from(
     new Set(articles.map((article) => article.category.name))
   );
