@@ -7,6 +7,13 @@ export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
   editor: lexicalEditor(),
 
+  admin: {
+    autoLogin: {
+      email: process.env.CMS_SEED_ADMIN_EMAIL || "",
+      password: process.env.CMS_SEED_ADMIN_PASSWORD || "",
+    },
+  },
+
   // Define and configure your collections in this array
   collections: [],
 
