@@ -14,11 +14,13 @@
     "@payloadcms/db-postgres": "^3.70.0",
     "@payloadcms/next": "^3.70.0",
     "@payloadcms/richtext-lexical": "^3.70.0",
+    "@plaiceholder/next": "^3.0.0",
     "dotenv": "^17.2.3",
     "graphql": "^16.12.0",
     "gsap": "^3.14.2",
     "next": "16.1.1",
     "payload": "^3.70.0",
+    "plaiceholder": "^3.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "sharp": "^0.34.5"

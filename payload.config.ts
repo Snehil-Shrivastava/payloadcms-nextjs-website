@@ -1,11 +1,23 @@
 import sharp from "sharp";
-import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import {
+  FixedToolbarFeature,
+  lexicalEditor,
+} from "@payloadcms/richtext-lexical";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { buildConfig } from "payload";
+import { Articles } from "./app/collections/Articles/config";
+import { Media } from "./app/collections/Media/config";
+import { ArticleAuthors } from "./app/collections/ArticleAuthors";
+import { Categories } from "./app/collections/Categories";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      FixedToolbarFeature(),
+    ],
+  }),
 
   admin: {
     autoLogin: {
@@ -15,7 +27,7 @@ export default buildConfig({
   },
 
   // Define and configure your collections in this array
-  collections: [],
+  collections: [Media, Articles, ArticleAuthors, Categories],
 
   // Your Payload secret - should be a complex and secure string, unguessable
   secret: process.env.PAYLOAD_SECRET || "",
