@@ -212,6 +212,7 @@ import { Flip } from "gsap/all";
 import dog from "@/public/dog-placeholder.jpg";
 // Import Types
 import { Article, Media, Category, ArticleAuthor } from "@/payload-types";
+import { RichText } from "./RichText";
 
 gsap.registerPlugin(Flip);
 
@@ -343,9 +344,8 @@ const SingleCard = ({ article }: { article: Article }) => {
                 )}
               </div>
               <div ref={textRef} className="opacity-0 hidden gap-20 flex-1">
-                <p>Lorem ipsum dolor sit amet...</p>
-                <div>
-                  <Image src={dog} alt="dog-placeholder" />
+                <div className="w-180">
+                  <RichText data={article.content} />
                 </div>
               </div>
             </div>
