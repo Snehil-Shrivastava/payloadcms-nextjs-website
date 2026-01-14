@@ -7,15 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx -r dotenv/config app/scripts/seed/script.ts"
+    "seed": "tsx -r dotenv/config app/scripts/seed/script.ts",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@payloadcms/db-postgres": "^3.70.0",
     "@payloadcms/next": "^3.70.0",
     "@payloadcms/richtext-lexical": "^3.70.0",
-    "@payloadcms/storage-s3": "^3.71.1",
+    "@payloadcms/storage-s3": "^3.70.0",
     "@plaiceholder/next": "^3.0.0",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "graphql": "^16.12.0",
     "gsap": "^3.14.2",
