@@ -9,6 +9,7 @@ import { Articles } from "./app/collections/Articles/config";
 import { Media } from "./app/collections/Media/config";
 import { ArticleAuthors } from "./app/collections/ArticleAuthors";
 import { Categories } from "./app/collections/Categories";
+import { s3Storage } from "@payloadcms/storage-s3";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -38,6 +39,25 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || "",
     },
   }),
+
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true,
+      },
+      bucket: process.env.R2_BUCKET as string,
+      config: {
+        endpoint: process.env.R2_ENDPOINT,
+        forcePathStyle: true,
+        region: "auto",
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID as string,
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY as string,
+        },
+      },
+    }),
+  ],
+
   // If you want to resize images, crop, set focal point, etc.
   // make sure to install it and pass it to the config.
   // This is optional - if you don't need to do these things,
