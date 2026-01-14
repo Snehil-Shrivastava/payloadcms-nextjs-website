@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import ArticleCard from "@/components/ArticleCard";
 import { useArticles } from "@/context/ArticlesContext";
+import ArticleCardPage from "@/app/(app)/articles/page";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -67,11 +68,13 @@ const Article = () => {
     <div ref={wrapperRef} id="smooth-wrapper" className="min-h-screen">
       <div ref={contentRef} id="smooth-content" className="p-6">
         <div className="w-full mx-auto py-20">
-          <div
+          {/* <div
             ref={containerRef}
             className="grid grid-cols-1 gap-8 origin-center will-change-transform w-full mx-auto place-items-center"
           >
-            {/* <ArticleCard articles={filteredArticles} strapiURL={strapiURL} /> */}
+            <ArticleCard articles={filteredArticles} />
+          </div> */}
+          <div ref={containerRef} className="grid grid-cols-1 gap-8">
             <ArticleCard articles={filteredArticles} />
           </div>
         </div>
