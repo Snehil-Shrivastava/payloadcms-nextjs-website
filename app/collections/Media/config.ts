@@ -6,34 +6,34 @@ import {
 
 export const Media: CollectionConfig = {
   slug: "media",
-  access: {
-    read: () => true,
-  },
+  // access: {
+  //   read: () => true,
+  // },
   fields: [
     {
       name: "alt",
       type: "text",
       required: true,
     },
-    {
-      name: "blurDataUrl",
-      type: "text",
-      required: true,
-      admin: { hidden: true },
-    },
+    // {
+    //   name: "blurDataUrl",
+    //   type: "text",
+    //   required: true,
+    //   admin: { hidden: true },
+    // },
   ],
   upload: true,
-  hooks: {
-    beforeChange: [
-      async ({ operation, data, req }) => {
-        if (operation !== "create") return data;
-        if (!isEligibleForBlurDataURL(req.file?.mimetype)) return data;
-        const base64 = await generateBlurDataURL(req.file?.data);
-        if (!base64) return data;
-        data.blurDataUrl = base64;
-        console.log(`Generated blur data URL for ${data.filename}`);
-        return data;
-      },
-    ],
-  },
+  // hooks: {
+  //   beforeChange: [
+  //     async ({ operation, data, req }) => {
+  //       if (operation !== "create") return data;
+  //       if (!isEligibleForBlurDataURL(req.file?.mimetype)) return data;
+  //       const base64 = await generateBlurDataURL(req.file?.data);
+  //       if (!base64) return data;
+  //       data.blurDataUrl = base64;
+  //       console.log(`Generated blur data URL for ${data.filename}`);
+  //       return data;
+  //     },
+  //   ],
+  // },
 };
