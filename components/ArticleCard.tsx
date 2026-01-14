@@ -1,182 +1,3 @@
-// "use client";
-
-// import Image from "next/image";
-// import "./ArticleCard.css";
-// import { useRef, useState } from "react";
-// import gsap from "gsap";
-// import { Flip } from "gsap/all";
-// import { Article, Media, Category, ArticleAuthor } from "@/payload-types";
-// import { RichText } from "./RichText";
-
-// gsap.registerPlugin(Flip);
-
-// /* ---------------- CONSTANTS ---------------- */
-// const COLLAPSED = { width: 680, height: 440 };
-// const EXPANDED = { outerWidth: 23000, height: 1100, innerWidth: 1400 };
-
-// /* ---------------- SINGLE CARD ---------------- */
-
-// const SingleCard = ({ article }: { article: Article }) => {
-//   const mainRef = useRef<HTMLDivElement>(null);
-//   const overflowRef = useRef<HTMLDivElement>(null);
-//   const outerRef = useRef<HTMLDivElement>(null);
-//   const innerRef = useRef<HTMLDivElement>(null);
-//   const textRef = useRef<HTMLDivElement>(null);
-
-//   const [isExpandedState, setIsExpandedState] = useState(false);
-//   const isExpanded = useRef(false);
-//   const isAnimating = useRef(false);
-
-//   const coverImage = article.coverImage as Media;
-//   const author = article.author as ArticleAuthor;
-//   const category = article.category as Category;
-
-//   const toggleAnimation = () => {
-//     if (isAnimating.current) return;
-//     const main = mainRef.current;
-//     const overflow = overflowRef.current;
-//     const outer = outerRef.current;
-//     const inner = innerRef.current;
-//     const text = textRef.current;
-
-//     if (!main || !outer || !inner || !text) return;
-
-//     isAnimating.current = true;
-
-//     const state = Flip.getState([main, overflow, outer]);
-//     const tl = gsap.timeline({
-//       defaults: { ease: "power3.inOut" },
-//       onComplete: () => {
-//         isExpanded.current = !isExpanded.current;
-//         setIsExpandedState(isExpanded.current);
-//         isAnimating.current = false;
-//       },
-//     });
-
-//     if (!isExpanded.current) {
-//       gsap.set(outer, { width: EXPANDED.outerWidth, height: EXPANDED.height });
-//       gsap.set(main, { height: EXPANDED.height });
-//       gsap.set(overflow, { width: "60vw" });
-
-//       Flip.from(state, { duration: 1.5, zIndex: 51 });
-
-//       tl.to(
-//         inner,
-//         { width: EXPANDED.innerWidth, height: EXPANDED.height, duration: 1.6 },
-//         0
-//       )
-//         .set(text, { display: "flex" })
-//         .to(text, { autoAlpha: 1, duration: 0.4 });
-//     } else {
-//       tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
-//         display: "none",
-//       });
-//       tl.to(inner, { width: COLLAPSED.width, height: COLLAPSED.height }, 0);
-//       gsap.set(outer, { width: "", height: "" });
-//       gsap.set(main, { height: "" });
-//       Flip.from(state, { duration: 1.5, zIndex: 51 });
-//     }
-//   };
-
-//   const handleScrollZoneClickRight = (e: React.MouseEvent) => {
-//     e.stopPropagation();
-//     if (overflowRef.current)
-//       overflowRef.current.scrollBy({ left: -500, behavior: "smooth" });
-//   };
-//   const handleScrollZoneClickLeft = (e: React.MouseEvent) => {
-//     e.stopPropagation();
-//     if (overflowRef.current)
-//       overflowRef.current.scrollBy({ left: 500, behavior: "smooth" });
-//   };
-
-//   return (
-//     <article
-//       ref={mainRef}
-//       onClick={toggleAnimation}
-//       className="relative select-none w-170 h-110 z-50 will-change-transform"
-//     >
-//       {/* Article Info Label */}
-//       <div className="absolute top-0 -left-85 w-70 flex items-end pointer-events-none">
-//         <div className="flex flex-col w-70 items-end">
-//           <div className="w-12 h-12 bg-black mb-3" />
-//           <h3 className="text-2xl font-medium text-gray-800 text-end">
-//             {article.title}
-//           </h3>
-//           <span className="text-neutral-600">{author?.name}</span>
-//           <span className="text-neutral-600 uppercase font-semibold">
-//             {category?.category}
-//           </span>
-//         </div>
-//       </div>
-
-//       <div className="relative w-[60vw]">
-//         <div
-//           ref={overflowRef}
-//           className="h-full overflow-x-auto overflow-y-hidden horizontal-scroll no-scrollbar relative"
-//         >
-//           <div ref={outerRef} className="relative left-0">
-//             <div className="relative cursor-pointer w-full h-full flex gap-20">
-//               <div
-//                 ref={innerRef}
-//                 className="w-170 h-110 shrink-0 overflow-hidden"
-//               >
-//                 {coverImage?.url && (
-//                   <Image
-//                     src={coverImage.url}
-//                     alt={article.title}
-//                     width={COLLAPSED.width}
-//                     height={COLLAPSED.height}
-//                     priority
-//                     className="w-full h-full object-cover"
-//                   />
-//                 )}
-//               </div>
-//               <div ref={textRef} className="opacity-0 hidden gap-20 flex-1">
-//                 <div className="w-180">
-//                   <RichText data={article.content} />
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {isExpandedState && (
-//           <div
-//             onClick={handleScrollZoneClickLeft}
-//             className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-end pr-8 group"
-//           >
-//             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-//               →
-//             </span>
-//           </div>
-//         )}
-//         {isExpandedState && (
-//           <div
-//             onClick={handleScrollZoneClickRight}
-//             className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-end pr-8 group"
-//           >
-//             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-//               ←
-//             </span>
-//           </div>
-//         )}
-//       </div>
-//     </article>
-//   );
-// };
-
-// /* ---------------- LIST ---------------- */
-
-// const ArticleCard = ({ articles }: { articles: Article[] }) => {
-//   return articles.map((article) => (
-//     <SingleCard key={article.id} article={article} />
-//   ));
-// };
-
-// export default ArticleCard;
-
-// --------------------------- CHANGING ANIMATION -----------------------------
-
 "use client";
 
 import Image from "next/image";
@@ -280,6 +101,26 @@ const SingleCard = ({ article }: { article: Article }) => {
   const toggleAnimationNew = () => {
     if (isAnimating.current) return;
 
+    const overflow = overflowRef.current;
+
+    if (isExpanded.current && overflow && overflow.scrollLeft > 0) {
+      isAnimating.current = true; // Lock interactions
+
+      // Animate the scroll back to 0 first
+      gsap.to(overflow, {
+        scrollLeft: 0,
+        duration: 0.6, // Adjust speed of scroll back
+        ease: "power2.inOut",
+        onComplete: () => {
+          isAnimating.current = false; // Unlock
+          // Recursively call this function.
+          // Since scrollLeft is now 0, it will skip this if-block and proceed to Collapse logic below.
+          toggleAnimationNew();
+        },
+      });
+      return; // Stop execution here, wait for scroll to finish
+    }
+
     const main = mainRef.current;
     const article = articleRef.current;
     const imageCard = imageCardRef.current;
@@ -302,7 +143,7 @@ const SingleCard = ({ article }: { article: Article }) => {
       // Expand
       gsap.set(main, { height: "85vh", width: "85%", marginRight: 0 });
       gsap.set(article, { width: "23000px" });
-      gsap.set(imageCard, { width: "1200px" });
+      gsap.set(imageCard, { width: "47vw" });
 
       tl.set(text, { display: "flex" }).to(text, {
         autoAlpha: 1,
@@ -315,7 +156,8 @@ const SingleCard = ({ article }: { article: Article }) => {
       });
 
       gsap.set(main, { height: "", width: "", marginRight: "" });
-      gsap.set(article, { width: "", scrollLeft: 0 }); // Reset scroll position
+      if (overflow) gsap.set(overflow, { scrollLeft: 0 });
+      gsap.set(article, { width: "" });
       gsap.set(imageCard, { width: "" });
     }
 
@@ -362,7 +204,7 @@ const SingleCard = ({ article }: { article: Article }) => {
       ref={mainRef}
       className="select-none w-170 h-100 ml-auto mr-auto relative"
     >
-      <div className="absolute top-0 -left-85 w-70 flex items-end pointer-events-none">
+      <div className="absolute top-0 -left-[13.4vw] w-[11vw] flex items-end pointer-events-none">
         <div className="flex flex-col w-70 items-end">
           <div className="w-12 h-12 bg-black mb-3" />
           <h3 className="text-2xl font-medium text-gray-800 text-end">
@@ -409,7 +251,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={handleScrollZoneClickLeft}
-            className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-end pr-8 group hover:bg-black/10"
+            className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               →
@@ -419,7 +261,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={handleScrollZoneClickRight}
-            className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-w-resize flex items-center justify-start pl-8 group hover:bg-black/10"
+            className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               ←

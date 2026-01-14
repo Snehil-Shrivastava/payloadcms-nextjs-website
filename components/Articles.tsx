@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import ArticleCard from "@/components/ArticleCard";
 import { useArticles } from "@/context/ArticlesContext";
-import ArticleCardPage from "@/app/(app)/articles/page";
+// import ArticleCardPage from "@/app/(app)/articles/page";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
