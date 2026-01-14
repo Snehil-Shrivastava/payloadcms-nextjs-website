@@ -202,7 +202,7 @@ const SingleCard = ({ article }: { article: Article }) => {
     <article
       onClick={toggleAnimationNew}
       ref={mainRef}
-      className="select-none w-170 h-100 ml-auto mr-auto relative"
+      className="select-none w-170 h-100 ml-auto mr-auto relative mb-8"
     >
       <div className="absolute top-0 -left-[13.4vw] w-[11vw] flex items-end pointer-events-none">
         <div className="flex flex-col w-70 items-end">

@@ -74,7 +74,11 @@ const Article = () => {
           >
             <ArticleCard articles={filteredArticles} />
           </div> */}
-          <div ref={containerRef} className="grid grid-cols-1 gap-8">
+          {/* <div
+            ref={containerRef}
+            className="grid grid-cols-1 gap-8 auto-rows-min"
+          > */}
+          <div ref={containerRef}>
             <ArticleCard articles={filteredArticles} />
           </div>
         </div>
