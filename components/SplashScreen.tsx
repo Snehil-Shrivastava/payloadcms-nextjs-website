@@ -11,23 +11,19 @@ const SplashScreen = ({ children }: { children: React.ReactNode }) => {
 
   const reveal = () => {
     if (!revealRef.current) return;
-    const tl = gsap.timeline({
-      onComplete: () => {
-        console.log("completed");
-      },
-    });
+    const tl = gsap.timeline();
     tl.to(revealRef.current, {
       scaleY: 0,
       transformOrigin: "top",
       ease: Expo.easeInOut,
-      duration: 1.2,
+      duration: 0.8,
     }).to(contentRef.current, {
       scale: 1,
       opacity: 1,
       display: "flex",
       transformOrigin: "center",
       ease: "none",
-      duration: 0.4,
+      duration: 0.2,
     });
   };
 
@@ -41,7 +37,7 @@ const SplashScreen = ({ children }: { children: React.ReactNode }) => {
         }
         return prev + 1;
       });
-    }, 25);
+    }, 10);
 
     return () => clearInterval(interval);
   }, []);

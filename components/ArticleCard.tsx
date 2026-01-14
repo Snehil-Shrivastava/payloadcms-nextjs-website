@@ -201,12 +201,81 @@ const SingleCard = ({ article }: { article: Article }) => {
   const [isExpandedState, setIsExpandedState] = useState(false);
 
   const isExpanded = useRef(false);
-  const expansionState = useRef(0);
+  // const expansionState = useRef(0);
   const isAnimating = useRef(false);
 
   const coverImage = article.coverImage as Media;
   const author = article.author as ArticleAuthor;
   const category = article.category as Category;
+
+  // const toggleAnimation = () => {
+  //   if (isAnimating.current) return;
+
+  //   const main = mainRef.current;
+  //   const article = articleRef.current;
+  //   const imageCard = imageCardRef.current;
+  //   const text = textRef.current;
+
+  //   isAnimating.current = true;
+
+  //   const state = Flip.getState([main, article, imageCard]);
+
+  //   // Cycle through 4 states: 0 (collapsed), 1 (first expansion), 2 (second expansion), 3 (back to first)
+  //   if (!expansionState.current) {
+  //     expansionState.current = 0;
+  //   }
+
+  //   expansionState.current = (expansionState.current + 1) % 4;
+
+  //   const tl = gsap.timeline({
+  //     onComplete: () => {
+  //       isAnimating.current = false;
+  //       // Update isExpanded state based on whether we're in an expanded state or not
+  //       isExpanded.current = expansionState.current !== 0;
+  //       setIsExpandedState(isExpanded.current);
+  //     },
+  //   });
+
+  //   switch (expansionState.current) {
+  //     case 0: // Collapsed (original state)
+  //       tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
+  //         display: "none",
+  //       });
+
+  //       gsap.set(main, { height: "", width: "", marginRight: "" });
+  //       gsap.set(article, { width: "", scrollLeft: 0 }); // Reset scroll position
+  //       gsap.set(imageCard, { width: "" });
+  //       break;
+
+  //     case 1: // First expansion
+  //       gsap.set(main, { height: "800px", width: "80%", marginRight: 0 });
+  //       gsap.set(article, { width: "23000px" });
+  //       gsap.set(imageCard, { width: "1000px" });
+
+  //       tl.set(text, { display: "flex" }).to(text, {
+  //         autoAlpha: 1,
+  //         duration: 0.4,
+  //       });
+  //       break;
+
+  //     case 2: // Second expansion (further expanded)
+  //       gsap.set(main, { height: "1100px", width: "85%", marginRight: 0 });
+  //       gsap.set(imageCard, { width: "1200px" });
+  //       break;
+
+  //     case 3: // Back to first expansion
+  //       gsap.set(main, { height: "800px", width: "80%", marginRight: 0 });
+  //       gsap.set(article, { width: "23000px" });
+  //       gsap.set(imageCard, { width: "1000px" });
+  //       break;
+  //   }
+
+  //   Flip.from(state, {
+  //     duration: 1.2,
+  //     zIndex: 51,
+  //     ease: "power2.inOut",
+  //   });
+  // };
 
   const toggleAnimationNew = () => {
     if (isAnimating.current) return;
@@ -220,54 +289,34 @@ const SingleCard = ({ article }: { article: Article }) => {
 
     const state = Flip.getState([main, article, imageCard]);
 
-    // Cycle through 4 states: 0 (collapsed), 1 (first expansion), 2 (second expansion), 3 (back to first)
-    if (!expansionState.current) {
-      expansionState.current = 0;
-    }
-
-    expansionState.current = (expansionState.current + 1) % 4;
+    isExpanded.current = !isExpanded.current;
 
     const tl = gsap.timeline({
       onComplete: () => {
         isAnimating.current = false;
-        // Update isExpanded state based on whether we're in an expanded state or not
-        isExpanded.current = expansionState.current !== 0;
         setIsExpandedState(isExpanded.current);
       },
     });
 
-    switch (expansionState.current) {
-      case 0: // Collapsed (original state)
-        tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
-          display: "none",
-        });
+    if (isExpanded.current) {
+      // Expand
+      gsap.set(main, { height: "85vh", width: "85%", marginRight: 0 });
+      gsap.set(article, { width: "23000px" });
+      gsap.set(imageCard, { width: "1200px" });
 
-        gsap.set(main, { height: "", width: "", marginRight: "" });
-        gsap.set(article, { width: "", scrollLeft: 0 }); // Reset scroll position
-        gsap.set(imageCard, { width: "" });
-        break;
+      tl.set(text, { display: "flex" }).to(text, {
+        autoAlpha: 1,
+        duration: 0.4,
+      });
+    } else {
+      // Collapse
+      tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
+        display: "none",
+      });
 
-      case 1: // First expansion
-        gsap.set(main, { height: "800px", width: "80%", marginRight: 0 });
-        gsap.set(article, { width: "23000px" });
-        gsap.set(imageCard, { width: "1000px" });
-
-        tl.set(text, { display: "flex" }).to(text, {
-          autoAlpha: 1,
-          duration: 0.4,
-        });
-        break;
-
-      case 2: // Second expansion (further expanded)
-        gsap.set(main, { height: "1100px", width: "85%", marginRight: 0 });
-        gsap.set(imageCard, { width: "1200px" });
-        break;
-
-      case 3: // Back to first expansion
-        gsap.set(main, { height: "800px", width: "80%", marginRight: 0 });
-        gsap.set(article, { width: "23000px" });
-        gsap.set(imageCard, { width: "1000px" });
-        break;
+      gsap.set(main, { height: "", width: "", marginRight: "" });
+      gsap.set(article, { width: "", scrollLeft: 0 }); // Reset scroll position
+      gsap.set(imageCard, { width: "" });
     }
 
     Flip.from(state, {
@@ -360,7 +409,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={handleScrollZoneClickLeft}
-            className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-end pr-8 group"
+            className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-end pr-8 group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               →
@@ -370,7 +419,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={handleScrollZoneClickRight}
-            className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-w-resize flex items-center justify-start pl-8 group"
+            className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-w-resize flex items-center justify-start pl-8 group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               ←

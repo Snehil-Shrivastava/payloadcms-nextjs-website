@@ -33,8 +33,8 @@ const Navbar = () => {
         translateY: 0,
         color: "black",
         ease: "power1.inOut",
-        duration: 0.7,
-        delay: 3,
+        duration: 0.5,
+        delay: 1.2,
       }
     )
       .to(navbarContainerRef.current, {
