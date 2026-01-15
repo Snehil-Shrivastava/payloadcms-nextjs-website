@@ -5,6 +5,9 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import { useArticles } from "@/context/ArticlesContext";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+
 const Navbar = () => {
   const navbarContainerRef = useRef<HTMLDivElement>(null);
   const navbarLogoContainerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +110,7 @@ const Navbar = () => {
     >
       <div
         ref={navbarLogoContainerRef}
-        className="absolute top-0 left-0 w-full opacity-0 bg-background pt-8 pb-4 flex flex-col gap-5"
+        className="absolute top-0 left-0 w-full opacity-0 bg-background pt-8 pb-4 flex flex-col gap-5 max-md:hidden"
       >
         <div className="uppercase text-sm mx-auto inline-flex items-center justify-center gap-20 max-lg:gap-12">
           {categories.map((category, index) => (
@@ -123,6 +126,13 @@ const Navbar = () => {
               {category}
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Hamburger menu */}
+      <div className="fixed top-0 right-0 w-20 h-16 flex items-end md:hidden">
+        <div className="mb-1.5 cursor-pointer">
+          <FontAwesomeIcon icon={faBars} size="xl" />
         </div>
       </div>
 
