@@ -6,48 +6,99 @@ import { useRef } from "react";
 import { useArticles } from "@/context/ArticlesContext";
 
 const Navbar = () => {
-  const navbarContainerRef = useRef(null);
-  const navbarLogoContainerRef = useRef(null);
-  const navRef = useRef(null);
+  const navbarContainerRef = useRef<HTMLDivElement>(null);
+  const navbarLogoContainerRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLHeadingElement>(null);
 
   const { categories, selectedCategory, setSelectedCategory } = useArticles();
 
-  useGSAP(() => {
-    const tl = gsap.timeline();
+  /* ---------------- RESPONSIVE CONFIG ---------------- */
 
-    tl.fromTo(
-      navRef.current,
-      {
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        translateX: "-50%",
-        translateY: "-50%",
-        color: "white",
-      },
-      {
-        position: "fixed",
-        left: 40,
-        top: 20,
-        translateX: 0,
-        translateY: 0,
-        color: "black",
-        ease: "power1.inOut",
-        duration: 0.5,
-        delay: 1.2,
-      }
-    )
-      .to(navbarContainerRef.current, {
-        height: "80px",
-      })
-      .to(navbarLogoContainerRef.current, {
-        opacity: 1,
-      });
+  const navConfig = useRef<{
+    from: gsap.TweenVars;
+    to: gsap.TweenVars;
+    height: number;
+  }>({
+    from: {},
+    to: {},
+    height: 80,
+  });
+
+  /* ---------------- MATCH MEDIA ---------------- */
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add("(max-width: 1024px)", () => {
+      navConfig.current = {
+        from: {
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          xPercent: -50,
+          yPercent: -50,
+          color: "white",
+        },
+        to: {
+          position: "fixed",
+          left: 40,
+          top: 27,
+          xPercent: 0,
+          yPercent: 0,
+          color: "black",
+        },
+        height: 64,
+      };
+    });
+
+    mm.add("(min-width: 1024px)", () => {
+      navConfig.current = {
+        from: {
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          xPercent: -50,
+          yPercent: -50,
+          color: "white",
+        },
+        to: {
+          position: "fixed",
+          left: 40,
+          top: 20,
+          xPercent: 0,
+          yPercent: 0,
+          color: "black",
+        },
+        height: 80,
+      };
+    });
+
+    return () => mm.revert();
   }, []);
+
+  /* ---------------- ANIMATION ---------------- */
+
+  useGSAP(() => {
+    const { from, to, height } = navConfig.current;
+
+    gsap
+      .timeline({ delay: 1.2 })
+      .fromTo(navRef.current, from, {
+        ...to,
+        duration: 0.5,
+        ease: "power1.inOut",
+      })
+      .to(navbarContainerRef.current, { height })
+      .to(navbarLogoContainerRef.current, { autoAlpha: 1 });
+  }, []);
+
+  /* ---------------- INTERACTION ---------------- */
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
   };
+
+  /* ---------------- RENDER ---------------- */
 
   return (
     <div
@@ -58,12 +109,12 @@ const Navbar = () => {
         ref={navbarLogoContainerRef}
         className="absolute top-0 left-0 w-full opacity-0 bg-background pt-8 pb-4 flex flex-col gap-5"
       >
-        <div className="h-full uppercase text-sm mx-auto inline-flex items-center justify-center gap-20 max-lg:gap-12">
+        <div className="uppercase text-sm mx-auto inline-flex items-center justify-center gap-20 max-lg:gap-12">
           {categories.map((category, index) => (
             <div
               key={index}
               onClick={() => handleCategoryClick(category)}
-              className={`cursor-pointer transition-colors duration-200 inline ${
+              className={`cursor-pointer transition-colors duration-200 ${
                 selectedCategory === category
                   ? "text-black font-semibold"
                   : "text-neutral-600 hover:text-black"
@@ -74,6 +125,7 @@ const Navbar = () => {
           ))}
         </div>
       </div>
+
       <h1 ref={navRef} className="absolute text-4xl max-lg:text-2xl font-bold">
         LOGO
       </h1>
