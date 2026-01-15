@@ -234,7 +234,7 @@ const SingleCard = ({ article }: { article: Article }) => {
       <div className="absolute max-lg:static top-0 -left-[13.4vw] 1440p:max-2xl:-left-[19vw] xl:max-1440p:-left-[18vw] lg:max-xl:-left-[18vw] w-[11vw] 1440p:max-2xl:w-[16vw] xl:max-1440p:w-[15vw] lg:max-xl:w-[15vw] max-lg:w-full max-lg:mb-5 flex items-end pointer-events-none">
         <div className="flex flex-col w-70 max-lg:w-full items-end max-lg:items-start">
           <div className="w-12 h-12 bg-black mb-3" />
-          <h3 className="text-2xl font-medium text-gray-800 text-end">
+          <h3 className="text-2xl font-medium text-gray-800 text-end max-md:text-start">
             {article.title}
           </h3>
           <span className="text-neutral-600">{author?.name}</span>
