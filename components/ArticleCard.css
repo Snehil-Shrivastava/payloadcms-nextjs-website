@@ -32,3 +32,9 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+@media (max-width: 770px) {
+  .horizontal-scroll-btn {
+    display: none;
+  }
+}

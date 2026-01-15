@@ -281,7 +281,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={(e) => scrollByAmount(1, e)}
-            className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10"
+            className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               →
@@ -291,7 +291,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={(e) => scrollByAmount(-1, e)}
-            className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10"
+            className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               ←
