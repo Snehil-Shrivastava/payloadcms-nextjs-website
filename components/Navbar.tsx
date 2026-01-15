@@ -387,11 +387,11 @@ const Navbar = () => {
       </h1>
 
       {/* Hamburger menu */}
-      <div className="fixed top-0 right-0 w-20 h-16 flex items-center justify-center md:hidden z-50">
+      <div className="fixed top-0 right-0 w-20 h-16 flex items-end justify-center md:hidden z-50">
         <div
           ref={hamburgerIconRef}
           onClick={toggleMenu}
-          className="cursor-pointer p-4"
+          className="cursor-pointer mb-2"
         >
           <FontAwesomeIcon icon={isMenuOpen ? faXmark : faBars} size="xl" />
         </div>
