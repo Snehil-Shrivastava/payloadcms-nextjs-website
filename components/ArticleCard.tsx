@@ -92,6 +92,15 @@ const SingleCard = ({ article }: { article: Article }) => {
       };
     });
 
+    mm.add("(min-width: 768px) and (max-width: 1024px)", () => {
+      expandedConfig.current = {
+        main: { height: "620px", width: "95%", marginRight: 0 },
+        article: { width: "23000px" },
+        imageCard: { width: "65vw", height: "450px" },
+        scrollAmount: 500,
+      };
+    });
+
     return () => mm.revert();
   }, []);
 
@@ -220,10 +229,10 @@ const SingleCard = ({ article }: { article: Article }) => {
     <article
       onClick={toggleAnimationNew}
       ref={mainRef}
-      className="select-none w-170 lg:max-xl:w-120 h-100 lg:max-xl:h-80 ml-auto mr-auto relative mb-8"
+      className="select-none w-170 lg:max-xl:w-120 max-lg:w-[90%] h-100 lg:max-xl:h-80 max-lg:h-auto ml-auto mr-auto relative mb-8 max-lg:mb-12"
     >
-      <div className="absolute top-0 -left-[13.4vw] 1440p:max-2xl:-left-[19vw] xl:max-1440p:-left-[18vw] lg:max-xl:-left-[18vw] w-[11vw] 1440p:max-2xl:w-[16vw] xl:max-1440p:w-[15vw] lg:max-xl:w-[15vw] flex items-end pointer-events-none">
-        <div className="flex flex-col w-70 items-end">
+      <div className="absolute max-lg:static top-0 -left-[13.4vw] 1440p:max-2xl:-left-[19vw] xl:max-1440p:-left-[18vw] lg:max-xl:-left-[18vw] w-[11vw] 1440p:max-2xl:w-[16vw] xl:max-1440p:w-[15vw] lg:max-xl:w-[15vw] max-lg:w-full max-lg:mb-5 flex items-end pointer-events-none">
+        <div className="flex flex-col w-70 max-lg:w-full items-end max-lg:items-start">
           <div className="w-12 h-12 bg-black mb-3" />
           <h3 className="text-2xl font-medium text-gray-800 text-end">
             {article.title}
@@ -236,9 +245,12 @@ const SingleCard = ({ article }: { article: Article }) => {
       </div>
       <div
         ref={overflowRef}
-        className="w-full h-full overflow-x-auto scrollbar-hide"
+        className="w-full h-full max-lg:h-auto overflow-x-auto scrollbar-hide"
       >
-        <div ref={articleRef} className="w-full h-full relative flex gap-15">
+        <div
+          ref={articleRef}
+          className="w-full h-full relative flex gap-15 max-lg:gap-10"
+        >
           <div ref={imageCardRef} className="h-full w-full shrink-0">
             {coverImage?.url && (
               <Image
@@ -269,7 +281,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={(e) => scrollByAmount(1, e)}
-            className="absolute right-0 top-0 bottom-0 w-55 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10"
+            className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               →
@@ -279,7 +291,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         {isExpandedState && (
           <div
             onClick={(e) => scrollByAmount(-1, e)}
-            className="absolute left-0 top-0 bottom-0 w-55 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10"
+            className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10"
           >
             <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
               ←

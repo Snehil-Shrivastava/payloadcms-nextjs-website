@@ -58,12 +58,12 @@ const Navbar = () => {
         ref={navbarLogoContainerRef}
         className="absolute top-0 left-0 w-full opacity-0 bg-background pt-8 pb-4 flex flex-col gap-5"
       >
-        <div className="h-full uppercase text-sm inline mx-auto">
+        <div className="h-full uppercase text-sm mx-auto inline-flex items-center justify-center gap-20 max-lg:gap-12">
           {categories.map((category, index) => (
             <div
               key={index}
               onClick={() => handleCategoryClick(category)}
-              className={`cursor-pointer transition-colors duration-200 inline mr-20 ${
+              className={`cursor-pointer transition-colors duration-200 inline ${
                 selectedCategory === category
                   ? "text-black font-semibold"
                   : "text-neutral-600 hover:text-black"
@@ -74,7 +74,7 @@ const Navbar = () => {
           ))}
         </div>
       </div>
-      <h1 ref={navRef} className="absolute text-4xl font-bold">
+      <h1 ref={navRef} className="absolute text-4xl max-lg:text-2xl font-bold">
         LOGO
       </h1>
     </div>
