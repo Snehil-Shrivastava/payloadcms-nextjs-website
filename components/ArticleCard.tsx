@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { Flip } from "gsap/all";
 import { Article, Media, Category, ArticleAuthor } from "@/payload-types";
+
 gsap.registerPlugin(Flip);
 
 /* ---------------- CONSTANTS ---------------- */
@@ -191,36 +192,6 @@ const SingleCard = ({ article }: { article: Article }) => {
     });
   };
 
-  // const handleScrollZoneClickLeft = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-
-  //   const overflow = overflowRef.current;
-  //   if (!overflow) return;
-
-  //   const scrollAmount = 800; // Adjust this value for how far to scroll
-
-  //   gsap.to(overflow, {
-  //     scrollLeft: overflow.scrollLeft + scrollAmount,
-  //     duration: 0.8,
-  //     ease: "power2.out",
-  //   });
-  // };
-
-  // const handleScrollZoneClickRight = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-
-  //   const overflow = overflowRef.current;
-  //   if (!overflow) return;
-
-  //   const scrollAmount = 800; // Adjust this value for how far to scroll
-
-  //   gsap.to(overflow, {
-  //     scrollLeft: overflow.scrollLeft - scrollAmount,
-  //     duration: 0.8,
-  //     ease: "power2.out",
-  //   });
-  // };
-
   const coverImage = article.coverImage as Media;
   const author = article.author as ArticleAuthor;
   const category = article.category as Category;
@@ -264,7 +235,6 @@ const SingleCard = ({ article }: { article: Article }) => {
             )}
           </div>
 
-          {/* This is the method i found works best to display the content in the manner i want. */}
           <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
             {article.content.root.children.map((articleContent, index) => (
               <div key={index} className="w-180 max-xl:w-120">
