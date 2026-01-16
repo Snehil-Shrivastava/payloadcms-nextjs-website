@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { Flip } from "gsap/all";
 import { Article, Media, Category, ArticleAuthor } from "@/payload-types";
+import { useWindowSize } from "@/lib/useWindowSize";
+import Link from "next/link";
 
 gsap.registerPlugin(Flip);
 
@@ -16,6 +18,7 @@ const COLLAPSED = { width: 680, height: 440 };
 const SingleCard = ({ article }: { article: Article }) => {
   const mainRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef<HTMLDivElement>(null);
+  const overflowLinkRef = useRef<HTMLAnchorElement>(null);
   const articleRef = useRef<HTMLDivElement>(null);
   const imageCardRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -23,6 +26,8 @@ const SingleCard = ({ article }: { article: Article }) => {
   const isExpanded = useRef(false);
   const isAnimating = useRef(false);
   const [isExpandedState, setIsExpandedState] = useState(false);
+
+  const { width } = useWindowSize();
 
   const expandedConfig = useRef<{
     main: gsap.TweenVars;
@@ -198,7 +203,7 @@ const SingleCard = ({ article }: { article: Article }) => {
 
   return (
     <article
-      onClick={toggleAnimationNew}
+      onClick={width >= 768 ? toggleAnimationNew : () => {}}
       ref={mainRef}
       className="select-none w-170 lg:max-xl:w-120 max-lg:w-[90%] h-100 lg:max-xl:h-80 max-lg:h-auto ml-auto mr-auto relative mb-8 max-lg:mb-12"
     >
@@ -214,61 +219,121 @@ const SingleCard = ({ article }: { article: Article }) => {
           </span>
         </div>
       </div>
-      <div
-        ref={overflowRef}
-        className="w-full h-full max-lg:h-auto overflow-x-auto scrollbar-hide"
-      >
+
+      {width >= 768 ? (
         <div
-          ref={articleRef}
-          className="w-full h-full relative flex gap-15 max-lg:gap-10"
+          ref={overflowRef}
+          className="w-full h-full max-lg:h-auto overflow-x-auto scrollbar-hide"
         >
-          <div ref={imageCardRef} className="h-full w-full shrink-0">
-            {coverImage?.url && (
-              <Image
-                src={coverImage.url}
-                alt={article.title}
-                width={COLLAPSED.width}
-                height={COLLAPSED.height}
-                priority
-                className="w-full h-full object-cover"
-              />
-            )}
+          <div
+            ref={articleRef}
+            className="w-full h-full relative flex gap-15 max-lg:gap-10"
+          >
+            <div ref={imageCardRef} className="h-full w-full shrink-0">
+              {coverImage?.url && (
+                <Image
+                  src={coverImage.url}
+                  alt={article.title}
+                  width={COLLAPSED.width}
+                  height={COLLAPSED.height}
+                  priority
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+
+            <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
+              {article.content.root.children.map((articleContent, index) => (
+                <div key={index} className="w-180 max-xl:w-120">
+                  {/* @ts-expect-error random */}
+                  {articleContent.children.map((text, i) => (
+                    <div key={i}>{text.text}</div>
+                  ))}
+                </div>
+              ))}
+              <div className="w-180"></div>
+            </div>
           </div>
 
-          <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
-            {article.content.root.children.map((articleContent, index) => (
-              <div key={index} className="w-180 max-xl:w-120">
-                {/* @ts-expect-error random */}
-                {articleContent.children.map((text, i) => (
-                  <div key={i}>{text.text}</div>
-                ))}
-              </div>
-            ))}
-            <div className="w-180"></div>
-          </div>
+          {isExpandedState && (
+            <div
+              onClick={(e) => scrollByAmount(1, e)}
+              className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+            >
+              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                →
+              </span>
+            </div>
+          )}
+          {isExpandedState && (
+            <div
+              onClick={(e) => scrollByAmount(-1, e)}
+              className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+            >
+              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                ←
+              </span>
+            </div>
+          )}
         </div>
+      ) : (
+        <Link
+          ref={overflowLinkRef}
+          className="w-full h-full max-lg:h-auto overflow-x-auto scrollbar-hide"
+          href={`/article/${article.slug}`}
+        >
+          <div
+            ref={articleRef}
+            className="w-full h-full relative flex gap-15 max-lg:gap-10"
+          >
+            <div ref={imageCardRef} className="h-full w-full shrink-0">
+              {coverImage?.url && (
+                <Image
+                  src={coverImage.url}
+                  alt={article.title}
+                  width={COLLAPSED.width}
+                  height={COLLAPSED.height}
+                  priority
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
 
-        {isExpandedState && (
-          <div
-            onClick={(e) => scrollByAmount(1, e)}
-            className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-          >
-            <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-              →
-            </span>
+            <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
+              {article.content.root.children.map((articleContent, index) => (
+                <div key={index} className="w-180 max-xl:w-120">
+                  {/* @ts-expect-error random */}
+                  {articleContent.children.map((text, i) => (
+                    <div key={i}>{text.text}</div>
+                  ))}
+                </div>
+              ))}
+              <div className="w-180"></div>
+            </div>
           </div>
-        )}
-        {isExpandedState && (
-          <div
-            onClick={(e) => scrollByAmount(-1, e)}
-            className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-          >
-            <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-              ←
-            </span>
-          </div>
-        )}
-      </div>
+
+          {isExpandedState && (
+            <div
+              onClick={(e) => scrollByAmount(1, e)}
+              className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+            >
+              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                →
+              </span>
+            </div>
+          )}
+          {isExpandedState && (
+            <div
+              onClick={(e) => scrollByAmount(-1, e)}
+              className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+            >
+              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                ←
+              </span>
+            </div>
+          )}
+        </Link>
+      )}
     </article>
   );
 };
