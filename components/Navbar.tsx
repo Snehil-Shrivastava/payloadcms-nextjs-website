@@ -7,11 +7,12 @@ import { useArticles } from "@/context/ArticlesContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const Navbar = () => {
   const navbarContainerRef = useRef<HTMLDivElement>(null);
   const navbarLogoContainerRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLHeadingElement>(null);
+  const navRef = useRef<HTMLAnchorElement>(null);
   const hamburgerMenuDimmedBgRef = useRef<HTMLDivElement>(null);
   const hamburgerMenuLinksContainerRef = useRef<HTMLDivElement>(null);
   const hamburgerIconRef = useRef<HTMLDivElement>(null);
@@ -209,9 +210,13 @@ const Navbar = () => {
         </div>
       </div>
 
-      <h1 ref={navRef} className="absolute text-4xl max-lg:text-2xl font-bold">
+      <Link
+        ref={navRef}
+        href={`/`}
+        className="absolute text-4xl max-lg:text-2xl font-bold"
+      >
         LOGO
-      </h1>
+      </Link>
 
       {/* Hamburger menu */}
       <div className="fixed top-0 right-0 w-20 h-16 flex items-end justify-center md:hidden z-50">
