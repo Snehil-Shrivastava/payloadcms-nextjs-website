@@ -1,6 +1,6 @@
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import type { Article } from "@/payload-types";
+import type { Article, Category } from "@/payload-types";
 
 export async function getArticles() {
   const payload = await getPayload({ config: configPromise });
@@ -15,6 +15,23 @@ export async function getArticles() {
     return articles as Article[];
   } catch (error) {
     console.error("Failed to fetch articles", error);
+    return [];
+  }
+}
+
+export async function getCategories() {
+  const payload = await getPayload({ config: configPromise });
+
+  try {
+    const { docs: categories } = await payload.find({
+      collection: "categories",
+      depth: 2,
+      limit: 50,
+    });
+
+    return categories as Category[];
+  } catch (error) {
+    console.error("Failed to fetch categories", error);
     return [];
   }
 }

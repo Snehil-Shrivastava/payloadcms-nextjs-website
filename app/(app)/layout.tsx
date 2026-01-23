@@ -4,7 +4,7 @@ import "./globals.css";
 import SplashScreen from "@/components/SplashScreen";
 import Navbar from "@/components/Navbar";
 import { ArticlesProvider } from "@/context/ArticlesContext";
-import { getArticles } from "@/lib/fetcher";
+import { getArticles, getCategories } from "@/lib/fetcher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +26,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const articles = await getArticles();
+  const [articles, categories] = await Promise.all([
+    getArticles(),
+    getCategories(),
+  ]);
 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ArticlesProvider initialArticles={articles}>
+        <ArticlesProvider
+          initialArticles={articles}
+          initialCategories={categories}
+        >
           <Navbar />
           <SplashScreen>{children}</SplashScreen>
         </ArticlesProvider>

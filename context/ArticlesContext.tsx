@@ -1,95 +1,71 @@
 // "use client";
 
+// import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+// // Import the generated type instead of defining it manually
+// import { Article, Category } from "@/payload-types";
 // import {
-//   createContext,
-//   useContext,
-//   useState,
-//   ReactNode,
-//   useEffect,
-// } from "react";
-
-// export interface Article {
-//   id: string;
-//   title: string;
-//   content: string;
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   cover: any;
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   author: any;
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   category: any;
-//   publishedAt: Date;
-// }
+//   buildCategoryTree,
+//   CategoryWithChildren,
+// } from "@/lib/categoryTreeWithChildren";
 
 // interface ArticlesContextType {
 //   articles: Article[];
 //   filteredArticles: Article[];
 //   selectedCategory: string | null;
 //   setSelectedCategory: (category: string | null) => void;
-//   categories: string[];
-//   strapiURL: string;
+//   categoryTree: CategoryWithChildren[];
 // }
 
 // const ArticlesContext = createContext<ArticlesContextType | undefined>(
-//   undefined
+//   undefined,
 // );
 
-// const STRAPI_URL = "http://127.0.0.1:1337";
-
-// export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
-//   const [articles, setArticles] = useState<Article[]>([]);
+// // We accept `initialArticles` passed down from the Server Component
+// export const ArticlesProvider = ({
+//   children,
+//   initialArticles,
+//   initialCategories,
+// }: {
+//   children: ReactNode;
+//   initialArticles: Article[];
+//   initialCategories: Category[];
+// }) => {
 //   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-//   const [isLoading, setIsLoading] = useState(true);
 
-//   useEffect(() => {
-//     let isMounted = true;
+//   // Extract unique category names
+//   // const categories = useMemo(() => {
+//   //   const cats = new Set<string>();
+//   //   initialArticles.forEach((article) => {
+//   //     // Type guard to ensure category is populated (depth > 0)
+//   //     const catName = (article.category as Category)?.category;
+//   //     if (catName) cats.add(catName);
+//   //   });
+//   //   return Array.from(cats);
+//   // }, [initialArticles]);
 
-//     const fetchArticles = async () => {
-//       try {
-//         const response = await fetch(`${STRAPI_URL}/api/articles?populate=*`);
-//         const data = await response.json();
-//         if (isMounted && data.data) {
-//           setArticles(data.data);
-//         }
-//       } catch (error) {
-//         console.error("Failed to fetch articles", error);
-//       } finally {
-//         if (isMounted) {
-//           setIsLoading(false);
-//         }
-//       }
-//     };
+//   const categoryTree = useMemo(() => {
+//     return buildCategoryTree(initialCategories);
+//   }, [initialCategories]);
 
-//     fetchArticles();
+//   // Filter logic
+//   const filteredArticles = useMemo(() => {
+//     if (!selectedCategory) return initialArticles;
 
-//     return () => {
-//       isMounted = false;
-//     };
-//   }, []);
-
-//   console.log("data", articles);
-
-//   const categories = Array.from(
-//     new Set(articles.map((article) => article.category.name))
-//   );
-
-//   const filteredArticles = selectedCategory
-//     ? articles.filter(
-//         (article) =>
-//           article.category?.category.toLowerCase() ===
-//           selectedCategory.toLowerCase()
-//       )
-//     : articles;
+//     return initialArticles.filter(
+//       (article) =>
+//         (article.category as Category)?.category?.toLowerCase() ===
+//         selectedCategory.toLowerCase(),
+//     );
+//   }, [selectedCategory, initialArticles]);
 
 //   return (
 //     <ArticlesContext.Provider
 //       value={{
-//         articles,
+//         articles: initialArticles,
 //         filteredArticles,
 //         selectedCategory,
 //         setSelectedCategory,
-//         categories,
-//         strapiURL: STRAPI_URL,
+//         categoryTree,
 //       }}
 //     >
 //       {children}
@@ -105,57 +81,90 @@
 //   return context;
 // };
 
-// --------------------------- NEW PAYLOAD METHOD ------------------------------
+// -----------------------------------------------------------------------------------
 
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useMemo } from "react";
-// Import the generated type instead of defining it manually
 import { Article, Category } from "@/payload-types";
+import {
+  buildCategoryTree,
+  CategoryWithChildren,
+} from "@/lib/categoryTreeWithChildren";
 
 interface ArticlesContextType {
   articles: Article[];
   filteredArticles: Article[];
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
-  categories: string[];
+  categoryTree: CategoryWithChildren[];
 }
 
 const ArticlesContext = createContext<ArticlesContextType | undefined>(
-  undefined
+  undefined,
 );
 
-// We accept `initialArticles` passed down from the Server Component
 export const ArticlesProvider = ({
   children,
   initialArticles,
+  initialCategories,
 }: {
   children: ReactNode;
   initialArticles: Article[];
+  initialCategories: Category[];
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Extract unique category names
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    initialArticles.forEach((article) => {
-      // Type guard to ensure category is populated (depth > 0)
-      const catName = (article.category as Category)?.category;
-      if (catName) cats.add(catName);
-    });
-    return Array.from(cats);
-  }, [initialArticles]);
+  // 1. Build the Tree
+  const categoryTree = useMemo(() => {
+    return buildCategoryTree(initialCategories);
+  }, [initialCategories]);
 
-  // Filter logic
+  // 2. Advanced Filter Logic
   const filteredArticles = useMemo(() => {
     if (!selectedCategory) return initialArticles;
 
-    return initialArticles.filter(
-      (article) =>
-        (article.category as Category)?.category?.toLowerCase() ===
-        selectedCategory.toLowerCase()
+    // A. Find the Category Object corresponding to the selected name
+    // We search both top-level parents and their children
+    let selectedCatObj: CategoryWithChildren | undefined;
+
+    // Check parents
+    selectedCatObj = categoryTree.find(
+      (c) => c.category?.toLowerCase() === selectedCategory.toLowerCase(),
     );
-  }, [selectedCategory, initialArticles]);
+
+    // If not found in parents, check children
+    if (!selectedCatObj) {
+      for (const parent of categoryTree) {
+        const childMatch = parent.children?.find(
+          (c) => c.category?.toLowerCase() === selectedCategory.toLowerCase(),
+        );
+        if (childMatch) {
+          selectedCatObj = childMatch;
+          break;
+        }
+      }
+    }
+
+    if (!selectedCatObj) return []; // Should not happen
+
+    // B. Create a set of Valid IDs (The selected category ID + all its children IDs)
+    const validCategoryIds = new Set<number>();
+    validCategoryIds.add(selectedCatObj.id);
+
+    if (selectedCatObj.children) {
+      selectedCatObj.children.forEach((child) =>
+        validCategoryIds.add(child.id),
+      );
+    }
+
+    // C. Filter Articles based on IDs
+    return initialArticles.filter((article) => {
+      const articleCat = article.category as Category;
+      // Check if the article's category ID is in our list of valid IDs
+      return validCategoryIds.has(articleCat.id);
+    });
+  }, [selectedCategory, initialArticles, categoryTree]);
 
   return (
     <ArticlesContext.Provider
@@ -164,7 +173,7 @@ export const ArticlesProvider = ({
         filteredArticles,
         selectedCategory,
         setSelectedCategory,
-        categories,
+        categoryTree,
       }}
     >
       {children}

@@ -193,6 +193,7 @@ export interface ArticleAuthor {
 export interface Category {
   id: number;
   category: string;
+  parent?: (number | null) | Category;
   updatedAt: string;
   createdAt: string;
 }
@@ -359,6 +360,7 @@ export interface ArticleAuthorsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   category?: T;
+  parent?: T;
   updatedAt?: T;
   createdAt?: T;
 }
