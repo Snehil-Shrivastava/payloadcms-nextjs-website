@@ -26,13 +26,16 @@ const Page = async ({ params }: PageProps) => {
     <div className="h-full w-full pt-16">
       <div className="h-full w-full pt-5 px-5">
         <h1 className="text-2xl font-medium mb-5">{article?.title}</h1>
-        <Image
-          src={coverImage.url as string}
-          alt={slug}
-          width={400}
-          height={180}
-          className="mb-5"
-        />
+        <div className="relative h-75 mb-5 ">
+          <Image
+            src={coverImage.url as string}
+            alt={slug}
+            // width={400}
+            // height={180}
+            className="object-cover"
+            fill
+          />
+        </div>
         <div className="flex items-center gap-5">
           <div className="w-10 h-10 bg-black rounded-full" />
           <div className="flex flex-col text-neutral-600">

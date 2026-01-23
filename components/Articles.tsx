@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import ArticleCard from "@/components/ArticleCard";
 import { useArticles } from "@/context/ArticlesContext";
-// import ArticleCardPage from "@/app/(app)/articles/page";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -16,7 +15,6 @@ const Article = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // const { filteredArticles, strapiURL } = useArticles();
   const { filteredArticles } = useArticles();
 
   useEffect(() => {
@@ -24,7 +22,6 @@ const Article = () => {
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
       smooth: 1.7,
-      // effects: true,
     });
 
     const handleScroll = () => {
@@ -68,16 +65,6 @@ const Article = () => {
     <div ref={wrapperRef} id="smooth-wrapper" className="min-h-screen">
       <div ref={contentRef} id="smooth-content" className="p-6">
         <div className="w-full mx-auto py-20">
-          {/* <div
-            ref={containerRef}
-            className="grid grid-cols-1 gap-8 origin-center will-change-transform w-full mx-auto place-items-center"
-          >
-            <ArticleCard articles={filteredArticles} />
-          </div> */}
-          {/* <div
-            ref={containerRef}
-            className="grid grid-cols-1 gap-8 auto-rows-min"
-          > */}
           <div ref={containerRef}>
             <ArticleCard articles={filteredArticles} />
           </div>

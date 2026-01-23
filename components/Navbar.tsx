@@ -340,11 +340,11 @@ const Navbar = () => {
   const navConfig = useRef<{
     from: gsap.TweenVars;
     to: gsap.TweenVars;
-    height: number;
+    minHeight: number;
   }>({
     from: {},
     to: {},
-    height: 100, // Kept taller for 2-row layout
+    minHeight: 80,
   });
 
   useGSAP(() => {
@@ -368,7 +368,7 @@ const Navbar = () => {
           yPercent: 0,
           color: "black",
         },
-        height: 64,
+        minHeight: 64,
       };
     });
 
@@ -390,7 +390,7 @@ const Navbar = () => {
           yPercent: 0,
           color: "black",
         },
-        height: 100,
+        minHeight: 80,
       };
     });
 
@@ -398,7 +398,7 @@ const Navbar = () => {
   }, []);
 
   useGSAP(() => {
-    const { from, to, height } = navConfig.current;
+    const { from, to, minHeight } = navConfig.current;
 
     gsap
       .timeline({ delay: 1.2 })
@@ -407,7 +407,7 @@ const Navbar = () => {
         duration: 0.5,
         ease: "power1.inOut",
       })
-      .to(navbarContainerRef.current, { height })
+      .to(navbarContainerRef.current, { minHeight })
       .to(navbarLogoContainerRef.current, { autoAlpha: 1 });
   }, []);
 
@@ -482,14 +482,14 @@ const Navbar = () => {
   return (
     <div
       ref={navbarContainerRef}
-      className="fixed top-0 w-full h-full z-99 select-none"
+      className="fixed top-0 w-full h-full z-99 select-none max-h-16 lg:max-h-20"
     >
       <div
         ref={navbarLogoContainerRef}
-        className="absolute top-0 left-0 w-full opacity-0 bg-background pt-8 flex flex-col items-center max-md:hidden"
+        className="absolute top-0 left-0 w-full h-full opacity-0 bg-background pt-8 flex flex-col items-center"
       >
         {/* ROW 1: PARENT CATEGORIES */}
-        <div className="uppercase text-sm inline-flex items-center justify-center gap-16 font-medium tracking-wide">
+        <div className="uppercase text-sm inline-flex items-center justify-center gap-16 font-medium tracking-wide max-md:hidden">
           {categoryTree.map((cat) => (
             <div
               key={cat.id}
