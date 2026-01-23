@@ -93,7 +93,12 @@ export default async function Page({ params }: PageProps) {
     getCategories(), // Needed for Navbar
   ]);
 
-  if (!currentArticle) return <div>Article not found</div>;
+  if (!currentArticle)
+    return (
+      <div className="h-full w-full flex items-center justify-center text-2xl font-semibold tracking-wide">
+        Article not found
+      </div>
+    );
 
   return (
     <>
