@@ -340,11 +340,11 @@ const Navbar = () => {
   const navConfig = useRef<{
     from: gsap.TweenVars;
     to: gsap.TweenVars;
-    minHeight: number;
+    height: number;
   }>({
     from: {},
     to: {},
-    minHeight: 80,
+    height: 80,
   });
 
   useGSAP(() => {
@@ -368,7 +368,7 @@ const Navbar = () => {
           yPercent: 0,
           color: "black",
         },
-        minHeight: 64,
+        height: 64,
       };
     });
 
@@ -390,7 +390,7 @@ const Navbar = () => {
           yPercent: 0,
           color: "black",
         },
-        minHeight: 80,
+        height: 80,
       };
     });
 
@@ -398,7 +398,7 @@ const Navbar = () => {
   }, []);
 
   useGSAP(() => {
-    const { from, to, minHeight } = navConfig.current;
+    const { from, to, height } = navConfig.current;
 
     gsap
       .timeline({ delay: 1.2 })
@@ -407,7 +407,7 @@ const Navbar = () => {
         duration: 0.5,
         ease: "power1.inOut",
       })
-      .to(navbarContainerRef.current, { minHeight })
+      .to(navbarContainerRef.current, { height })
       .to(navbarLogoContainerRef.current, { autoAlpha: 1 });
   }, []);
 
@@ -482,7 +482,7 @@ const Navbar = () => {
   return (
     <div
       ref={navbarContainerRef}
-      className="fixed top-0 w-full h-full z-99 select-none max-h-16 lg:max-h-20"
+      className="fixed top-0 w-full h-full z-99 select-none"
     >
       <div
         ref={navbarLogoContainerRef}
@@ -512,7 +512,7 @@ const Navbar = () => {
 
         {/* ROW 2: SUB CATEGORIES */}
         <div
-          className={`flex justify-center items-center gap-8 text-xs mt-4 transition-all duration-500 ease-out overflow-hidden ${
+          className={`flex justify-center items-center gap-8 text-xs mt-4 transition-all duration-500 ease-out overflow-hidden max-md:hidden ${
             subCategoriesToDisplay.length > 0
               ? "opacity-100 max-h-10 translate-y-0"
               : "opacity-0 max-h-0 -translate-y-2 pointer-events-none"

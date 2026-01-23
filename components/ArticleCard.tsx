@@ -312,7 +312,7 @@ const SingleCard = ({ article }: { article: Article }) => {
             </div>
           </div>
 
-          {isExpandedState && (
+          {/* {isExpandedState && (
             <div
               onClick={(e) => scrollByAmount(1, e)}
               className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
@@ -331,7 +331,7 @@ const SingleCard = ({ article }: { article: Article }) => {
                 ←
               </span>
             </div>
-          )}
+          )} */}
         </Link>
       )}
     </article>
