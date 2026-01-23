@@ -2,6 +2,8 @@ import type { CollectionConfig } from "payload";
 import { generateSlugHook } from "./hooks/generate-slug-hook";
 import { generateContentSummaryHook } from "./hooks/generate-content-summary-hook";
 import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintext";
+import { revalidatePath } from "next/cache";
+import { relationship } from "payload/shared";
 
 export const Articles: CollectionConfig = {
   slug: "articles",
@@ -90,4 +92,25 @@ export const Articles: CollectionConfig = {
       required: true,
     },
   ],
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        revalidatePath("/", "page");
+        if (doc.slug) {
+          revalidatePath(`/article/${doc.slug}`, "page");
+        }
+        revalidatePath("/admin");
+        return doc;
+      },
+    ],
+    afterDelete: [
+      ({ doc }) => {
+        revalidatePath("/", "page");
+        if (doc.slug) {
+          revalidatePath(`/article/${doc.slug}`, "page");
+        }
+        return doc;
+      },
+    ],
+  },
 };
