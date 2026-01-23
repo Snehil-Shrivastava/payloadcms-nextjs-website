@@ -344,7 +344,7 @@ const Navbar = () => {
   }>({
     from: {},
     to: {},
-    height: 80,
+    height: 85,
   });
 
   useGSAP(() => {
@@ -390,7 +390,7 @@ const Navbar = () => {
           yPercent: 0,
           color: "black",
         },
-        height: 80,
+        height: 85,
       };
     });
 

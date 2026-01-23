@@ -112,79 +112,6 @@ const SingleCard = ({ article }: { article: Article }) => {
     return () => mm.revert();
   }, []);
 
-  // const toggleAnimationNew = () => {
-  //   if (isAnimating.current) return;
-
-  //   const main = mainRef.current;
-  //   const article = articleRef.current;
-  //   const imageCard = imageCardRef.current;
-  //   const text = textRef.current;
-  //   const overflow = overflowRef.current;
-
-  //   if (!main || !article || !imageCard) return;
-
-  //   if (isExpanded.current && overflow && overflow.scrollLeft > 0) {
-  //     isAnimating.current = true; // Lock interactions
-
-  //     // Animate the scroll back to 0 first
-  //     gsap.to(overflow, {
-  //       scrollLeft: 0,
-  //       duration: 0.6, // Adjust speed of scroll back
-  //       ease: "power2.inOut",
-  //       onComplete: () => {
-  //         isAnimating.current = false; // Unlock
-  //         // Recursively call this function.
-  //         // Since scrollLeft is now 0, it will skip this if-block and proceed to Collapse logic below.
-  //         toggleAnimationNew();
-  //       },
-  //     });
-  //     return; // Stop execution here, wait for scroll to finish
-  //   }
-
-  //   isAnimating.current = true;
-
-  //   const state = Flip.getState([main, article, imageCard]);
-
-  //   isExpanded.current = !isExpanded.current;
-
-  //   const tl = gsap.timeline({
-  //     onComplete: () => {
-  //       isAnimating.current = false;
-  //       setIsExpandedState(isExpanded.current);
-  //     },
-  //   });
-
-  //   if (isExpanded.current) {
-  //     const config = expandedConfig.current;
-
-  //     // Expand
-  //     gsap.set(main, config.main);
-  //     gsap.set(article, config.article);
-  //     gsap.set(imageCard, config.imageCard);
-
-  //     tl.set(text, { display: "flex" }).to(text, {
-  //       autoAlpha: 1,
-  //       duration: 0.4,
-  //     });
-  //   } else {
-  //     // Collapse
-  //     tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
-  //       display: "none",
-  //     });
-
-  //     gsap.set(main, { clearProps: "all" });
-  //     gsap.set(article, { clearProps: "all" });
-  //     gsap.set(imageCard, { clearProps: "all" });
-  //     if (overflow) gsap.set(overflow, { scrollLeft: 0 });
-  //   }
-
-  //   Flip.from(state, {
-  //     duration: 1.2,
-  //     zIndex: 51,
-  //     ease: "power2.inOut",
-  //   });
-  // };
-
   useLayoutEffect(() => {
     // 1. If mobile, do nothing (we use Links)
     if (width < 768) return;
@@ -288,7 +215,6 @@ const SingleCard = ({ article }: { article: Article }) => {
 
   return (
     <article
-      // onClick={width >= 768 ? toggleAnimationNew : () => {}}
       onClick={handleCardClick}
       ref={mainRef}
       className="select-none w-170 lg:max-xl:w-120 max-lg:w-[90%] h-100 lg:max-xl:h-80 max-lg:h-auto ml-auto mr-auto relative mb-8 max-lg:mb-12"

@@ -97,9 +97,6 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DESKTOP VIEW (Visible on md screens and up)                */}
-      {/* ========================================================== */}
       <div className="hidden md:block h-full w-full">
         {/* 
             We initialize the provider with 'initialSlug'. 
@@ -116,9 +113,6 @@ export default async function Page({ params }: PageProps) {
         </ArticlesProvider>
       </div>
 
-      {/* ========================================================== */}
-      {/* MOBILE VIEW (Visible only on small screens)                */}
-      {/* ========================================================== */}
       <div className="md:hidden h-full w-full">
         <MobileArticlePage article={currentArticle} />
       </div>
