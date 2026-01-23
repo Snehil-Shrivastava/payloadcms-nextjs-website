@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import "./ArticleCard.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { Flip } from "gsap/all";
 import { Article, Media, Category, ArticleAuthor } from "@/payload-types";
 import { useWindowSize } from "@/lib/useWindowSize";
 import Link from "next/link";
+import { useArticles } from "@/context/ArticlesContext";
 
 gsap.registerPlugin(Flip);
 
@@ -23,11 +24,12 @@ const SingleCard = ({ article }: { article: Article }) => {
   const imageCardRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
-  const isExpanded = useRef(false);
   const isAnimating = useRef(false);
-  const [isExpandedState, setIsExpandedState] = useState(false);
 
+  const { activeSlug, toggleArticle } = useArticles();
   const { width } = useWindowSize();
+
+  const isActive = activeSlug === article.slug;
 
   const expandedConfig = useRef<{
     main: gsap.TweenVars;
@@ -110,77 +112,160 @@ const SingleCard = ({ article }: { article: Article }) => {
     return () => mm.revert();
   }, []);
 
-  const toggleAnimationNew = () => {
-    if (isAnimating.current) return;
+  // const toggleAnimationNew = () => {
+  //   if (isAnimating.current) return;
+
+  //   const main = mainRef.current;
+  //   const article = articleRef.current;
+  //   const imageCard = imageCardRef.current;
+  //   const text = textRef.current;
+  //   const overflow = overflowRef.current;
+
+  //   if (!main || !article || !imageCard) return;
+
+  //   if (isExpanded.current && overflow && overflow.scrollLeft > 0) {
+  //     isAnimating.current = true; // Lock interactions
+
+  //     // Animate the scroll back to 0 first
+  //     gsap.to(overflow, {
+  //       scrollLeft: 0,
+  //       duration: 0.6, // Adjust speed of scroll back
+  //       ease: "power2.inOut",
+  //       onComplete: () => {
+  //         isAnimating.current = false; // Unlock
+  //         // Recursively call this function.
+  //         // Since scrollLeft is now 0, it will skip this if-block and proceed to Collapse logic below.
+  //         toggleAnimationNew();
+  //       },
+  //     });
+  //     return; // Stop execution here, wait for scroll to finish
+  //   }
+
+  //   isAnimating.current = true;
+
+  //   const state = Flip.getState([main, article, imageCard]);
+
+  //   isExpanded.current = !isExpanded.current;
+
+  //   const tl = gsap.timeline({
+  //     onComplete: () => {
+  //       isAnimating.current = false;
+  //       setIsExpandedState(isExpanded.current);
+  //     },
+  //   });
+
+  //   if (isExpanded.current) {
+  //     const config = expandedConfig.current;
+
+  //     // Expand
+  //     gsap.set(main, config.main);
+  //     gsap.set(article, config.article);
+  //     gsap.set(imageCard, config.imageCard);
+
+  //     tl.set(text, { display: "flex" }).to(text, {
+  //       autoAlpha: 1,
+  //       duration: 0.4,
+  //     });
+  //   } else {
+  //     // Collapse
+  //     tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
+  //       display: "none",
+  //     });
+
+  //     gsap.set(main, { clearProps: "all" });
+  //     gsap.set(article, { clearProps: "all" });
+  //     gsap.set(imageCard, { clearProps: "all" });
+  //     if (overflow) gsap.set(overflow, { scrollLeft: 0 });
+  //   }
+
+  //   Flip.from(state, {
+  //     duration: 1.2,
+  //     zIndex: 51,
+  //     ease: "power2.inOut",
+  //   });
+  // };
+
+  useLayoutEffect(() => {
+    // 1. If mobile, do nothing (we use Links)
+    if (width < 768) return;
 
     const main = mainRef.current;
-    const article = articleRef.current;
+    const articleEl = articleRef.current;
     const imageCard = imageCardRef.current;
     const text = textRef.current;
-    const overflow = overflowRef.current;
 
-    if (!main || !article || !imageCard) return;
+    if (!main || !articleEl || !imageCard) return;
 
-    if (isExpanded.current && overflow && overflow.scrollLeft > 0) {
-      isAnimating.current = true; // Lock interactions
+    // 2. Capture State BEFORE the change
+    const state = Flip.getState([main, articleEl, imageCard]);
 
-      // Animate the scroll back to 0 first
-      gsap.to(overflow, {
-        scrollLeft: 0,
-        duration: 0.6, // Adjust speed of scroll back
-        ease: "power2.inOut",
-        onComplete: () => {
-          isAnimating.current = false; // Unlock
-          // Recursively call this function.
-          // Since scrollLeft is now 0, it will skip this if-block and proceed to Collapse logic below.
-          toggleAnimationNew();
-        },
-      });
-      return; // Stop execution here, wait for scroll to finish
-    }
-
-    isAnimating.current = true;
-
-    const state = Flip.getState([main, article, imageCard]);
-
-    isExpanded.current = !isExpanded.current;
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        isAnimating.current = false;
-        setIsExpandedState(isExpanded.current);
-      },
-    });
-
-    if (isExpanded.current) {
+    // 3. Apply the CSS/DOM changes immediately
+    if (isActive) {
+      // EXPANDED STATE
       const config = expandedConfig.current;
-
-      // Expand
       gsap.set(main, config.main);
-      gsap.set(article, config.article);
+      gsap.set(articleEl, config.article);
       gsap.set(imageCard, config.imageCard);
 
-      tl.set(text, { display: "flex" }).to(text, {
-        autoAlpha: 1,
-        duration: 0.4,
-      });
+      // Show text container
+      if (text) {
+        gsap.set(text, { display: "flex", autoAlpha: 1 });
+      }
     } else {
-      // Collapse
-      tl.to(text, { autoAlpha: 0, duration: 0.2 }).set(text, {
-        display: "none",
-      });
-
+      // COLLAPSED STATE
       gsap.set(main, { clearProps: "all" });
-      gsap.set(article, { clearProps: "all" });
+      gsap.set(articleEl, { clearProps: "all" });
       gsap.set(imageCard, { clearProps: "all" });
-      if (overflow) gsap.set(overflow, { scrollLeft: 0 });
+
+      // Hide text container
+      if (text) {
+        gsap.set(text, { display: "none", autoAlpha: 0 });
+      }
+
+      // Reset scroll
+      if (overflowRef.current) overflowRef.current.scrollLeft = 0;
     }
 
+    // 4. Animate from captured state to new state
     Flip.from(state, {
       duration: 1.2,
       zIndex: 51,
       ease: "power2.inOut",
+      onStart: () => {
+        isAnimating.current = true;
+      },
+      onComplete: () => {
+        isAnimating.current = false;
+      },
+      // Important: If this is the initial load (deep link), skip animation
+      // We can check if document.timeline.currentTime is very low, or use a ref 'hasMounted'
     });
+  }, [isActive, width]); // Runs when isActive toggles
+
+  /* ---------------- INTERACTION ---------------- */
+
+  const handleCardClick = () => {
+    if (width < 768) return; // Allow default Link behavior on mobile
+    if (isAnimating.current) return;
+
+    // If closing and scrolled, scroll back first (Your existing logic)
+    if (isActive && overflowRef.current && overflowRef.current.scrollLeft > 0) {
+      isAnimating.current = true;
+      gsap.to(overflowRef.current, {
+        scrollLeft: 0,
+        duration: 0.6,
+        ease: "power2.inOut",
+        onComplete: () => {
+          isAnimating.current = false;
+          // After scrolling back, trigger the toggle
+          toggleArticle(article.slug);
+        },
+      });
+      return;
+    }
+
+    // Update URL and State
+    toggleArticle(article.slug);
   };
 
   const scrollByAmount = (direction: 1 | -1, e: React.MouseEvent) => {
@@ -203,7 +288,8 @@ const SingleCard = ({ article }: { article: Article }) => {
 
   return (
     <article
-      onClick={width >= 768 ? toggleAnimationNew : () => {}}
+      // onClick={width >= 768 ? toggleAnimationNew : () => {}}
+      onClick={handleCardClick}
       ref={mainRef}
       className="select-none w-170 lg:max-xl:w-120 max-lg:w-[90%] h-100 lg:max-xl:h-80 max-lg:h-auto ml-auto mr-auto relative mb-8 max-lg:mb-12"
     >
@@ -243,37 +329,49 @@ const SingleCard = ({ article }: { article: Article }) => {
             </div>
 
             <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
-              {article.content.root.children.map((articleContent, index) => (
-                <div key={index} className="w-180 max-xl:w-120">
-                  {/* @ts-expect-error random */}
-                  {articleContent.children.map((text, i) => (
-                    <div key={i}>{text.text}</div>
-                  ))}
-                </div>
-              ))}
-              <div className="w-180"></div>
+              {article?.content.root.children?.map((articleContent, index) => {
+                // @ts-expect-error random
+                return articleContent.children?.length > 0 ||
+                  articleContent.value ? (
+                  <div key={index} className="w-200 max-xl:w-120 relative">
+                    {/* @ts-expect-error random */}
+                    {articleContent.children?.map((content, i) => (
+                      <div key={i}>{content.text}</div>
+                    ))}
+                    {articleContent.value ? (
+                      <Image
+                        // @ts-expect-error random
+                        src={articleContent.value.url}
+                        alt="img"
+                        className="object-cover"
+                        fill
+                      />
+                    ) : null}
+                  </div>
+                ) : null;
+              })}
             </div>
           </div>
 
-          {isExpandedState && (
-            <div
-              onClick={(e) => scrollByAmount(1, e)}
-              className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-            >
-              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-                →
-              </span>
-            </div>
-          )}
-          {isExpandedState && (
-            <div
-              onClick={(e) => scrollByAmount(-1, e)}
-              className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-            >
-              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-                ←
-              </span>
-            </div>
+          {isActive && (
+            <>
+              <div
+                onClick={(e) => scrollByAmount(1, e)}
+                className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+              >
+                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                  →
+                </span>
+              </div>
+              <div
+                onClick={(e) => scrollByAmount(-1, e)}
+                className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
+              >
+                <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
+                  ←
+                </span>
+              </div>
+            </>
           )}
         </div>
       ) : (
@@ -298,40 +396,7 @@ const SingleCard = ({ article }: { article: Article }) => {
                 />
               )}
             </div>
-
-            <div ref={textRef} className="opacity-0 hidden gap-10 shrink-0">
-              {article.content.root.children.map((articleContent, index) => (
-                <div key={index} className="w-180 max-xl:w-120">
-                  {/* @ts-expect-error random */}
-                  {articleContent.children.map((text, i) => (
-                    <div key={i}>{text.text}</div>
-                  ))}
-                </div>
-              ))}
-              <div className="w-180"></div>
-            </div>
           </div>
-
-          {/* {isExpandedState && (
-            <div
-              onClick={(e) => scrollByAmount(1, e)}
-              className="absolute right-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-e-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-            >
-              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-                →
-              </span>
-            </div>
-          )}
-          {isExpandedState && (
-            <div
-              onClick={(e) => scrollByAmount(-1, e)}
-              className="absolute left-0 lg:top-0 lg:bottom-0 max-lg:bottom-[10] w-55 max-lg:h-112.5 z-50 cursor-w-resize flex items-center justify-center group hover:bg-black/10 horizontal-scroll-btn"
-            >
-              <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-bold text-3xl">
-                ←
-              </span>
-            </div>
-          )} */}
         </Link>
       )}
     </article>
