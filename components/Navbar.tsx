@@ -525,7 +525,7 @@ const Navbar = () => {
               className={`cursor-pointer transition-colors duration-200 ${
                 selectedCategory === child.category
                   ? "text-black font-semibold border-b border-black"
-                  : "text-neutral-500 hover:text-black"
+                  : "text-neutral-500 hover:text-black hover:border-b hover:border-black"
               }`}
             >
               {child.category}

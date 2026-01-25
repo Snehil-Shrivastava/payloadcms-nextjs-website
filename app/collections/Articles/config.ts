@@ -3,7 +3,6 @@ import { generateSlugHook } from "./hooks/generate-slug-hook";
 import { generateContentSummaryHook } from "./hooks/generate-content-summary-hook";
 import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintext";
 import { revalidatePath } from "next/cache";
-import { relationship } from "payload/shared";
 
 export const Articles: CollectionConfig = {
   slug: "articles",
@@ -95,20 +94,17 @@ export const Articles: CollectionConfig = {
   hooks: {
     afterChange: [
       ({ doc }) => {
-        revalidatePath("/", "page");
-        if (doc.slug) {
-          revalidatePath(`/article/${doc.slug}`, "page");
-        }
+        revalidatePath("/");
+        revalidatePath(`/article/${doc.slug}`);
         revalidatePath("/admin");
+
         return doc;
       },
     ],
     afterDelete: [
       ({ doc }) => {
-        revalidatePath("/", "page");
-        if (doc.slug) {
-          revalidatePath(`/article/${doc.slug}`, "page");
-        }
+        revalidatePath("/");
+        revalidatePath(`/article/${doc.slug}`);
         return doc;
       },
     ],
