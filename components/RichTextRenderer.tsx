@@ -51,12 +51,12 @@ export const RenderLexicalNode = ({ node }: { node: any }) => {
   if (node.type === "heading") {
     const HeadingTag = `${node.tag}` as keyof JSX.IntrinsicElements;
     const headingClasses: Record<string, string> = {
-      h1: "text-4xl font-bold mb-4 mt-8",
-      h2: "text-3xl font-bold mb-3 mt-6",
-      h3: "text-2xl font-semibold mb-3 mt-5",
-      h4: "text-xl font-semibold mb-2 mt-4",
-      h5: "text-lg font-semibold mb-2 mt-3",
-      h6: "text-base font-semibold mb-2 mt-3",
+      h1: "text-4xl font-bold mb-4",
+      h2: "text-3xl font-bold mb-3",
+      h3: "text-2xl font-semibold mb-3",
+      h4: "text-xl font-semibold mb-2",
+      h5: "text-lg font-semibold mb-2",
+      h6: "text-base font-semibold mb-2",
     };
 
     return (
@@ -107,7 +107,7 @@ export const RenderLexicalNode = ({ node }: { node: any }) => {
   // Handle code blocks
   if (node.type === "code") {
     return (
-      <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4">
+      <pre className="bg-gray-100 p-4 overflow-x-auto mb-4">
         <code className="text-sm font-mono">
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {node.children?.map((child: any, i: number) => (
@@ -124,12 +124,12 @@ export const RenderLexicalNode = ({ node }: { node: any }) => {
 
     if (media?.url) {
       return (
-        <div className="my-6 relative w-full h-100">
+        <div className="relative w-full h-full max-lg:h-120 max-lg:mb-4">
           <Image
             src={media.url}
             alt={media.alt || "Article image"}
             fill
-            className="object-cover rounded-lg"
+            className="object-cover"
           />
         </div>
       );
@@ -165,7 +165,7 @@ export const RenderLexicalContent = ({ nodes }: { nodes: any }) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ContentColumnBlock = ({ block }: { block: any }) => {
   return (
-    <div className="w-200 max-xl:w-120 shrink-0 flex flex-col">
+    <div className="w-200 max-lg:w-full max-xl:w-120 shrink-0 flex lg:flex-col">
       {block.heading && (
         <h3 className="text-2xl font-bold mb-4">{block.heading}</h3>
       )}
@@ -182,7 +182,7 @@ export const ImageBlockRenderer = ({ block }: { block: any }) => {
   const image = block.image as Media;
 
   return (
-    <div className="w-200 max-xl:w-120 shrink-0 relative h-full">
+    <div className="w-200 max-lg:w-full max-xl:w-120 shrink-0 relative h-full max-lg:h-120 max-lg:mb-4">
       {image?.url && (
         <>
           <Image
@@ -206,7 +206,7 @@ export const ImageBlockRenderer = ({ block }: { block: any }) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const VideoBlockRenderer = ({ block }: { block: any }) => {
   return (
-    <div className="w-200 max-xl:w-120 shrink-0">
+    <div className="w-200 max-lg:w-full max-xl:w-120 shrink-0">
       <div className="relative w-full aspect-video">
         <iframe
           src={block.videoUrl}
@@ -268,7 +268,10 @@ export const RenderContentAsColumns = ({
           if (!hasContent) return null;
 
           return (
-            <div key={index} className="w-200 max-xl:w-120 shrink-0">
+            <div
+              key={index}
+              className="w-200 max-lg:w-full max-xl:w-120 shrink-0"
+            >
               <RenderLexicalNode node={node} />
             </div>
           );

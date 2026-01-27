@@ -2,7 +2,10 @@ import { Article, ArticleAuthor, Category, Media } from "@/payload-types";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { RenderLexicalContent } from "./RichTextRenderer";
+import {
+  RenderContentAsColumns,
+  RenderLexicalContent,
+} from "./RichTextRenderer";
 
 const MobileArticlePage = ({ article }: { article: Article }) => {
   const coverImage = article?.coverImage as Media;
@@ -44,8 +47,11 @@ const MobileArticlePage = ({ article }: { article: Article }) => {
         <div className="mt-5 pb-20">
           {/* {article?.content && <RichText data={article?.content} />} */}
 
-          <RenderLexicalContent
+          {/* <RenderLexicalContent
             nodes={article?.content?.root?.children || []}
+          /> */}
+          <RenderContentAsColumns
+            contentBlocks={article?.content?.root?.children || []}
           />
         </div>
       </div>
