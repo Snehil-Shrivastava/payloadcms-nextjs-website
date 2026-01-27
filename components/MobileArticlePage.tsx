@@ -1,8 +1,8 @@
-import { RichText } from "@/components/RichText";
 import { Article, ArticleAuthor, Category, Media } from "@/payload-types";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { RenderLexicalContent } from "./RichTextRenderer";
 
 const MobileArticlePage = ({ article }: { article: Article }) => {
   const coverImage = article?.coverImage as Media;
@@ -42,7 +42,11 @@ const MobileArticlePage = ({ article }: { article: Article }) => {
           </div>
         </div>
         <div className="mt-5 pb-20">
-          {article?.content && <RichText data={article?.content} />}
+          {/* {article?.content && <RichText data={article?.content} />} */}
+
+          <RenderLexicalContent
+            nodes={article?.content?.root?.children || []}
+          />
         </div>
       </div>
     </div>
