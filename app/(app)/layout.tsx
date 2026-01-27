@@ -5,6 +5,7 @@ import SplashScreen from "@/components/SplashScreen";
 import Navbar from "@/components/Navbar";
 import { ArticlesProvider } from "@/context/ArticlesContext";
 import { getArticles, getCategories } from "@/lib/fetcher";
+import CTA from "@/components/CTA";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default async function RootLayout({
         >
           <Navbar />
           <SplashScreen>{children}</SplashScreen>
+          <CTA />
         </ArticlesProvider>
       </body>
     </html>
