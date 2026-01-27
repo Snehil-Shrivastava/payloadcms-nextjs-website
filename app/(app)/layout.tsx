@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import { ArticlesProvider } from "@/context/ArticlesContext";
 import { getArticles, getCategories } from "@/lib/fetcher";
 import CTA from "@/components/CTA";
+import { Suspense } from "react";
+import ConsultationModal from "@/components/ConsultationModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +46,9 @@ export default async function RootLayout({
           <Navbar />
           <SplashScreen>{children}</SplashScreen>
           <CTA />
+          <Suspense fallback={null}>
+            <ConsultationModal />
+          </Suspense>
         </ArticlesProvider>
       </body>
     </html>
