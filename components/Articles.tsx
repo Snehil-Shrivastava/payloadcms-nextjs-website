@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import ArticleCard from "@/components/ArticleCard";
 import { useArticles } from "@/context/ArticlesContext";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -17,7 +18,7 @@ const Article = () => {
 
   const { filteredArticles } = useArticles();
 
-  useEffect(() => {
+  useGSAP(() => {
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
