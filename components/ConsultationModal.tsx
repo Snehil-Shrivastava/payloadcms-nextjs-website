@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import consultationIcon from "@/public/consultation_modal_icon.svg";
 import contactIcon from "@/public/contact_icon.svg";
@@ -20,6 +20,7 @@ const ConsultationModal = () => {
   const searchParams = useSearchParams();
   const modal = searchParams.get("showConsultation");
   const pathname = usePathname();
+  const router = useRouter();
 
   const [step, setStep] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -28,6 +29,11 @@ const ConsultationModal = () => {
     email: "",
     phone: "",
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   // If the param doesn't exist, don't render anything
   if (!modal) return null;
@@ -42,7 +48,7 @@ const ConsultationModal = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -50,18 +56,52 @@ const ConsultationModal = () => {
     }));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
 
-    const finalPayload = {
-      projectType: selectedOptions,
-      ...formData,
-    };
+    try {
+      // 1. Prepare Data: Join the array into a string with newlines
+      // Your API uses .replace(/\n/g, "<br/>"), so we use \n here
+      const payload = {
+        ...formData,
+        projectType: selectedOptions.join("\n"),
+      };
 
-    console.log("Submitting Data:", finalPayload);
-    // Add your API call here
-    // alert("Form Submitted! Check console.");
+      // 2. Send Request (Assuming your API route is at /api/contact)
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
+
+      // 3. Handle Success
+      setSubmitStatus("success");
+
+      // Optional: Close modal automatically after 2 seconds
+      setTimeout(() => {
+        router.replace(pathname, { scroll: false }); // Closes modal
+        // Reset form for next time
+        setStep(1);
+        setFormData({ name: "", email: "", phone: "" });
+        setSelectedOptions([]);
+        setSubmitStatus("idle");
+      }, 2500);
+    } catch (error) {
+      console.error("Submission error:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -95,7 +135,6 @@ const ConsultationModal = () => {
             </h2>
           </div>
 
-          {/* --- STEP 1: RADIO SELECTION --- */}
           {step === 1 && (
             <div className="animate-in fade-in duration-300">
               <div className="py-8 grid grid-cols-2 justify-items-center gap-10 max-sm:gap-6">
@@ -128,7 +167,6 @@ const ConsultationModal = () => {
                 })}
               </div>
 
-              {/* Next Button */}
               <div
                 className={`flex justify-end transition-all duration-100 ease-linear mt-4 w-4/5 max-sm:w-full mx-auto select-none max-sm:text-sm ${
                   selectedOptions.length > 0
@@ -146,7 +184,6 @@ const ConsultationModal = () => {
             </div>
           )}
 
-          {/* --- STEP 2: CONTACT FORM --- */}
           {step === 2 && (
             <form
               onSubmit={handleSubmit}
@@ -190,7 +227,6 @@ const ConsultationModal = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex justify-between mt-8 w-4/5 max-sm:w-full mx-auto select-none max-sm:text-sm">
                 <button
                   type="button"
