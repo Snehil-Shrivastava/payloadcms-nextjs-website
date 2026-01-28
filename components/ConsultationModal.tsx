@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
 import consultationIcon from "@/public/consultation_modal_icon.svg";
 import contactIcon from "@/public/contact_icon.svg";
 import Image from "next/image";

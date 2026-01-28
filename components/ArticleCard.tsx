@@ -101,20 +101,11 @@ const SingleCard = ({ article }: { article: Article }) => {
       };
     });
 
-    mm.add("(min-width: 768px) and (max-width: 1024px)", () => {
-      expandedConfig.current = {
-        main: { height: "620px", width: "78%", marginRight: 0 },
-        article: { width: "23000px" },
-        imageCard: { width: "65vw", height: "100%" },
-        scrollAmount: 500,
-      };
-    });
-
     return () => mm.revert();
   }, []);
 
   useLayoutEffect(() => {
-    if (width < 768) return;
+    if (width < 1024) return;
 
     const main = mainRef.current;
     const articleEl = articleRef.current;
@@ -160,7 +151,7 @@ const SingleCard = ({ article }: { article: Article }) => {
   }, [isActive, width]);
 
   const handleCardClick = () => {
-    if (width < 768) return;
+    if (width < 1024) return;
     if (isAnimating.current) return;
 
     if (isActive && overflowRef.current && overflowRef.current.scrollLeft > 0) {
@@ -222,7 +213,7 @@ const SingleCard = ({ article }: { article: Article }) => {
         </div>
       </div>
 
-      {width >= 768 ? (
+      {width >= 1024 ? (
         <div
           ref={overflowRef}
           className="w-full h-full max-lg:h-auto overflow-x-auto scrollbar-hide"
