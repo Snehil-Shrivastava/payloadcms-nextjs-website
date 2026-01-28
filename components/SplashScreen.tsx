@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { gsap, Expo } from "gsap";
+import CTA from "./CTA";
 
 const SplashScreen = ({ children }: { children: React.ReactNode }) => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -43,10 +44,10 @@ const SplashScreen = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <div className="w-full h-full text-black relative">
+    <div className="w-full h-full text-black">
       <div
         ref={revealRef}
-        className="h-screen w-screen bg-black flex justify-center items-center absolute top-0 origin-top"
+        className="h-screen w-screen bg-black flex justify-center items-center absolute top-0 origin-top z-98"
       ></div>
       <div
         ref={contentRef}
@@ -54,6 +55,7 @@ const SplashScreen = ({ children }: { children: React.ReactNode }) => {
       >
         {children}
       </div>
+      <CTA />
     </div>
   );
 };

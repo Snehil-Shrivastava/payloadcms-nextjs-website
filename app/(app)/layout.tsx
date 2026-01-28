@@ -45,7 +45,7 @@ export default async function RootLayout({
         >
           <Navbar />
           <SplashScreen>{children}</SplashScreen>
-          <CTA />
+          {/* <CTA /> */}
           <Suspense fallback={null}>
             <ConsultationModal />
           </Suspense>
