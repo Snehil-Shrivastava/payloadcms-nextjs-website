@@ -92,7 +92,7 @@ const SingleCard = ({ article }: { article: Article }) => {
       };
     });
 
-    mm.add("(min-width: 1024px) and (max-width: 1280px)", () => {
+    mm.add("(min-width: 1024px) and (max-width: 1279px)", () => {
       expandedConfig.current = {
         main: { height: "450px", width: "80%", marginRight: 0 },
         article: { width: "23000px" },
@@ -198,16 +198,16 @@ const SingleCard = ({ article }: { article: Article }) => {
       ref={mainRef}
       className="select-none w-170 lg:max-xl:w-120 max-lg:w-[90%] h-100 lg:max-xl:h-80 max-lg:h-auto ml-auto mr-auto relative mb-8 max-lg:mb-12"
     >
-      <div className="absolute max-lg:static top-0 -left-[13.4vw] 1440p:max-2xl:-left-[19vw] xl:max-1440p:-left-[18vw] lg:max-xl:-left-[21vw] w-[11vw] 1440p:max-2xl:w-[16vw] xl:max-1440p:w-[15vw] lg:max-xl:w-[18vw] max-lg:w-full max-lg:mb-5 flex items-end pointer-events-none">
-        <div className="flex flex-col w-70 max-lg:w-full items-end max-lg:items-start lg:max-xl:gap-2">
+      <div className="absolute max-lg:static top-0 -left-85 1440p:max-2xl:-left-[19vw] xl:max-1440p:-left-[20vw] lg:max-xl:-left-[21vw] w-auto 1440p:max-2xl:w-[16vw] xl:max-1440p:w-[17vw] lg:max-xl:w-[18vw] max-lg:w-full max-lg:mb-5 flex items-end pointer-events-none">
+        <div className="flex flex-col w-70 max-lg:w-full items-end max-lg:items-start lg:max-xl:gap-2 xl:max-1440p:gap-2">
           <div className="w-12 h-12 bg-black mb-3" />
-          <h3 className="text-2xl lg:max-xl:text-lg font-medium text-gray-800 text-end max-md:text-start">
+          <h3 className="text-2xl lg:max-xl:text-lg xl:max-1440p:text-xl 1440p:max-2xl:text-xl font-medium text-gray-800 text-end max-md:text-start">
             {article.title}
           </h3>
-          <span className="text-neutral-600 lg:max-xl:text-sm">
+          <span className="text-neutral-600 lg:max-xl:text-sm xl:max-1440p:text-base  1440p:max-2xl:text-base">
             {author?.name}
           </span>
-          <span className="text-neutral-600 uppercase font-semibold lg:max-xl:text-sm">
+          <span className="text-neutral-600 uppercase font-semibold lg:max-xl:text-sm xl:max-1440p:text-base  1440p:max-2xl:text-base">
             {category?.category}
           </span>
         </div>
