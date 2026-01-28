@@ -21,9 +21,8 @@ const ConsultationModal = () => {
   const modal = searchParams.get("showConsultation");
   const pathname = usePathname();
 
-  // --- STATE MANAGEMENT ---
-  const [step, setStep] = useState(1); // 1 = Selection, 2 = Contact Form
-  const [selectedOption, setSelectedOption] = useState("");
+  const [step, setStep] = useState(1);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,7 +32,15 @@ const ConsultationModal = () => {
   // If the param doesn't exist, don't render anything
   if (!modal) return null;
 
-  // Handle Input Changes for Step 2
+  const toggleOption = (option: string) => {
+    setSelectedOptions(
+      (prev) =>
+        prev.includes(option)
+          ? prev.filter((item) => item !== option) // Remove if exists
+          : [...prev, option], // Add if doesn't exist
+    );
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -43,13 +50,12 @@ const ConsultationModal = () => {
     }));
   };
 
-  // Final Submission
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
     const finalPayload = {
-      projectType: selectedOption,
+      projectType: selectedOptions,
       ...formData,
     };
 
@@ -94,7 +100,7 @@ const ConsultationModal = () => {
             <div className="animate-in fade-in duration-300">
               <div className="py-8 grid grid-cols-2 justify-items-center gap-10 max-sm:gap-6">
                 {ConsulationOptions.map((options, index) => {
-                  const isSelected = selectedOption === options;
+                  const isSelected = selectedOptions.includes(options);
 
                   return (
                     <label
@@ -114,7 +120,7 @@ const ConsultationModal = () => {
                         name="wantToBuild"
                         className="sr-only"
                         checked={isSelected}
-                        onChange={(e) => setSelectedOption(e.target.value)}
+                        onChange={() => toggleOption(options)}
                       />
                       {options}
                     </label>
@@ -124,8 +130,10 @@ const ConsultationModal = () => {
 
               {/* Next Button */}
               <div
-                className={`flex justify-end transition-all duration-200 ease-in mt-4 w-4/5 max-sm:w-full mx-auto select-none max-sm:text-sm ${
-                  selectedOption ? "opacity-100 visible" : "opacity-0 invisible"
+                className={`flex justify-end transition-all duration-100 ease-linear mt-4 w-4/5 max-sm:w-full mx-auto select-none max-sm:text-sm ${
+                  selectedOptions.length > 0
+                    ? "opacity-100 visible"
+                    : "opacity-0 invisible"
                 }`}
               >
                 <button
