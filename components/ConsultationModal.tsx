@@ -205,7 +205,7 @@ const ConsultationModal = () => {
                     className="max-sm:w-2 max-sm:h-2"
                   />
                 </div>
-                <h2 className="uppercase text-lg max-sm:text-xs font-medium leading-5">
+                <h2 className="uppercase text-lg max-sm:text-xs font-medium leading-5 select-none">
                   {step === 1
                     ? "What are you planning to build"
                     : "Contact details"}

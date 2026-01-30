@@ -5,7 +5,6 @@ import SplashScreen from "@/components/SplashScreen";
 import Navbar from "@/components/Navbar";
 import { ArticlesProvider } from "@/context/ArticlesContext";
 import { getArticles, getCategories } from "@/lib/fetcher";
-import CTA from "@/components/CTA";
 import { Suspense } from "react";
 import ConsultationModal from "@/components/ConsultationModal";
 
@@ -45,7 +44,6 @@ export default async function RootLayout({
         >
           <Navbar />
           <SplashScreen>{children}</SplashScreen>
-          {/* <CTA /> */}
           <Suspense fallback={null}>
             <ConsultationModal />
           </Suspense>
